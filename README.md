@@ -50,6 +50,60 @@ echo serialize($products);
 ?>
 ```
 
+### Добавление сквозной аналитики Битрикс24
+
+#### Условие: скрипт сквозной аналитики уже подключен на странице
+
+```php
+// init.php
+if(\Bitrix\Main\Loader::includeModule('awz.bx24lead')){
+    $eventManager = \Bitrix\Main\EventManager::getInstance();
+    $eventManager->addEventHandlerCompatible("main", "OnProlog",
+        ["\\Awz\\Bx24Lead\\bx24Trace", "OnProlog"]
+    );
+}
+```
+
+```js
+//jquery добавление трейса б24 во все формы
+$(document).ready(function(){
+    try{
+        setTimeout(function(){
+            $('form').each(function(){
+                if(!$(this).find('input[name="TRACE"]').length)
+                    $(this).append('<input type="hidden" name="TRACE">');
+                $(this).find('input[name="TRACE"]').val(b24Tracker.guest.getTrace());
+            });
+        },3000);
+    }catch (e) {
+        console.log(e);
+    }
+});
+```
+
+#### Подключаем скрипт сквозной аналитики на все страницы и отправляем данные в модуль фоновым запросом
+
+```php
+<script>
+    (function(w,d,u){
+        var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/60000|0);
+        var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+    })(window,document,'https://cdn-ru.bitrix24.by/b34062590/crm/tag/call.tracker.js');
+</script>
+<?
+global $APPLICATION;
+if(
+    \Bitrix\Main\Loader::includeModule('awz.bx24lead') &&
+    $APPLICATION->getCurPage(false) == '/personal/order/make/'
+){
+    $dynamicArea = new \Bitrix\Main\Composite\StaticArea("bx24lead_trace");
+    $dynamicArea->startDynamicArea();
+    ?>
+    <script><?=\Awz\Bx24Lead\bx24Trace::getHitJs('bx');?></script>
+    <?$dynamicArea->finishDynamicArea();?>
+<?}?>
+```
+
 <!-- doc-end -->
 
 <!-- cl-start -->
