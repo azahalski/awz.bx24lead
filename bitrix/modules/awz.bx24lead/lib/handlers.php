@@ -16,6 +16,14 @@ class Handlers {
         }
     }
 
+    public static function onAfterResultAdd($WEB_FORM_ID, $RESULT_ID){
+        Application::getInstance()->addBackgroundJob(
+            array("\Awz\Bx24Lead\Agent", "formJob"),
+            array((int)$RESULT_ID,(int)$WEB_FORM_ID),
+            Application::JOB_PRIORITY_NORMAL
+        );
+    }
+
     public static function OnSaleOrderSaved(Event $event){
         /** @var Bitrix\Sale\Order $order */
         $order = $event->getParameter("ENTITY");

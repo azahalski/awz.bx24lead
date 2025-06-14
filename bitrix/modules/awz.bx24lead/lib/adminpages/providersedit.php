@@ -149,30 +149,7 @@ class ProvidersEdit extends IForm implements IParams {
             ?>
             <table>
 
-            <tr>
-                <td style="border-bottom:1px dashed #000000;">
-                    <?=Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT')?>
-                </td>
-                <td style="border-bottom:1px dashed #000000;">
-                    <?
-                    $valuesOpt = [
-                        'PHONE'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_PHONE'),
-                        'EMAIL'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_EMAIL'),
-                        'PHONE,EMAIL'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_PHONE').', '.Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_EMAIL'),
-                        'EMAIL,PHONE'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_EMAIL').', '.Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_PHONE'),
-                    ];
-                    ?>
-                    <select name="<?=$arField['NAME']?>[options][contact]">
-                        <option value="">-</option>
-                        <?foreach($valuesOpt as $v=>$title){?>
-                            <option value="<?=$v?>"<?=(isset($values['options']['contact']) && ($v == $values['options']['contact'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
-                        <?}?>
-                    </select>
-                </td>
-                <td style="border-bottom:1px dashed #000000;">
 
-                </td>
-            </tr>
                 <tr>
                     <td style="border-bottom:1px dashed #000000;">
                         <?=Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_REGISTER_SONET_EVENT')?>
@@ -195,13 +172,96 @@ class ProvidersEdit extends IForm implements IParams {
 
                     </td>
                 </tr>
+                <tr>
+                    <td style="border-bottom:1px dashed #000000;">
+                        Создавать компанию
+                    </td>
+                    <td style="border-bottom:1px dashed #000000;">
+                        <?
+                        $valuesOpt = [
+                            'Y'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_SEL_YES'),
+                            'N'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_SEL_NO'),
+                        ];
+                        ?>
+                        <select name="<?=$arField['NAME']?>[options][addcompany]" style="float:left;">
+                            <option value="">-</option>
+                            <?foreach($valuesOpt as $v=>$title){?>
+                                <option value="<?=$v?>"<?=(isset($values['options']['addcompany']) && ($v == $values['options']['addcompany'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
+                            <?}?>
+                        </select>
+
+                    </td>
+                    <td style="border-bottom:1px dashed #000000;">
+                        <select name="<?=$arField['NAME']?>[options][nalogid]" style="float:left;">
+                            <option value="">Выберите код свойства с налоговым идентификатором</option>
+                            <?foreach($fieldsHook as $code=>$field){
+                                if(substr($code,0,9)!='[COMPANY]') continue;
+                                $v = str_replace('[COMPANY]','', $code);
+                                if($v === 'NALOG_ID') continue;
+                                $title = '['.$v.'] - '.$field['title'];
+                                ?>
+                                <option value="<?=$v?>"<?=(isset($values['options']['nalogid']) && ($v == $values['options']['nalogid'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
+                            <?}?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:1px dashed #000000;">
+                        Создавать контакт
+                    </td>
+                    <td style="border-bottom:1px dashed #000000;">
+                        <?
+                        $valuesOpt = [
+                            'Y'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_SEL_YES'),
+                            'N'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_SEL_NO'),
+                        ];
+                        ?>
+                        <select name="<?=$arField['NAME']?>[options][addcontact]">
+                            <option value="">-</option>
+                            <?foreach($valuesOpt as $v=>$title){?>
+                                <option value="<?=$v?>"<?=(isset($values['options']['addcontact']) && ($v == $values['options']['addcontact'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
+                            <?}?>
+                        </select>
+                    </td>
+                    <td style="border-bottom:1px dashed #000000;">
+                        <?
+                        $valuesOpt = [
+                            'PHONE'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_PHONE'),
+                            'EMAIL'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_EMAIL'),
+                            'PHONE,EMAIL'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_PHONE').', '.Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_EMAIL'),
+                            'EMAIL,PHONE'=>Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_EMAIL').', '.Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_OPTION_CONTACT_PHONE'),
+                        ];
+                        ?>
+                        <select name="<?=$arField['NAME']?>[options][contact]">
+                            <option value="">Укажите как искать контакт</option>
+                            <?foreach($valuesOpt as $v=>$title){?>
+                                <option value="<?=$v?>"<?=(isset($values['options']['contact']) && ($v == $values['options']['contact'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
+                            <?}?>
+                        </select>
+                    </td>
+                </tr>
+
 
 
             <?
             $arFields = [];
             $orderProps = [];
+            $formProps = [];
+            //print_r($entityId);die();
             if(substr($entityId,0,7)==='IBLOCK_') {
                 $arFields = \CIBlockParameters::GetFieldCode('-', '-');
+            }elseif(substr($entityId,0,8)==='WEBFORM_') {
+                $columns = [];
+                $answers = [];
+                $answers2 = [];
+                \CForm::GetResultAnswerArray(str_replace('WEBFORM_','',$entityId), $columns, $answers, $answers2);
+                foreach($columns as $columnData){
+                    $formProps[] = [
+                            'ID'=>$columnData['ID'],
+                            'CODE'=>$columnData['SID'],
+                            'NAME'=>$columnData['TITLE']
+                    ];
+                }
             }elseif(substr($entityId,0,11)==='ORDER_SALE_'){
                 $personTypeId = (int) str_replace('ORDER_SALE_','',$entityId);
                 $personTypeIdData = \Bitrix\Sale\Internals\PersonTypeTable::getById($personTypeId)->fetch();
@@ -248,7 +308,7 @@ class ProvidersEdit extends IForm implements IParams {
             }
 
 
-            for($i=1;$i<=10;$i++){
+            for($i=1;$i<=\Awz\Bx24Lead\Helper::MAX_CONSTANTS_ROW;$i++){
                 $code = 'const'.$i;
                 $fieldName = Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_FIELD_CONST').' '.$i;
                 $this->EntityPRMRow($arField, $values, $fieldsHook, $code, $fieldName);
@@ -261,7 +321,7 @@ class ProvidersEdit extends IForm implements IParams {
                     $this->EntityPRMRow($arField, $values, $fieldsHookSimple, $code, $fieldName);
                 }
             }
-            if(Loader::includeModule('sale')){
+            if(Loader::includeModule('sale') && substr($entityId,0,11)==='ORDER_SALE_'){
                 /** @var $field \Bitrix\Main\ORM\Fields\Field */
                 foreach(\Bitrix\Sale\Internals\OrderTable::getMap() as $field){
                     if($field instanceof \Bitrix\Main\ORM\Fields\Relations\Reference) continue;
@@ -272,6 +332,11 @@ class ProvidersEdit extends IForm implements IParams {
             }
             foreach($orderProps as $prop){
                 $code = 'PROPERTY_'.$prop['CODE'];
+                $fieldName = 'ID:'.$prop['ID'].' - '.$prop['NAME'];
+                $this->EntityPRMRow($arField, $values, $fieldsHook, $code, $fieldName);
+            }
+            foreach($formProps as $prop){
+                $code = $prop['CODE'];
                 $fieldName = 'ID:'.$prop['ID'].' - '.$prop['NAME'];
                 $this->EntityPRMRow($arField, $values, $fieldsHook, $code, $fieldName);
             }

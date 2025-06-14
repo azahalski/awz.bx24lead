@@ -14,6 +14,10 @@ Loc::loadMessages(__FILE__);
 class ProvidersList extends IList implements IParams {
 
     public function __construct($params){
+        global $POST_RIGHT;
+        if(AccessController::isEditSettings()){
+            $POST_RIGHT = "W";
+        }
         parent::__construct($params);
     }
 
@@ -50,27 +54,8 @@ class ProvidersList extends IList implements IParams {
             "ADD_GROUP_ACTIONS"=> ["edit","delete"],
             "ADD_LIST_ACTIONS"=> ["delete","edit"],
             "FIND"=> [],
-            "FIND_FROM_ENTITY"=>['ID'=>[],'ACTIVE'=>[],'NAME'=>[]],
-            "CALLBACK_ACTIONS"=>[
-                'delete'=>[
-                    "\\Awz\\Bx24Lead\\AdminPages\\ProvidersList", "delete"
-                ],
-                "update"=>[
-                    "\\Awz\\Bx24Lead\\AdminPages\\ProvidersList", "update"
-                ]
-            ]
+            "FIND_FROM_ENTITY"=>['ID'=>[],'ACTIVE'=>[],'NAME'=>[]]
         ];
         return $arParams;
-    }
-
-    public static function delete($id){
-        if(AccessController::isEditSettings()){
-            \Awz\Bx24Lead\ProvidersTable::delete($id);
-        }
-    }
-    public static function update($primary, $data){
-        if(AccessController::isEditSettings()){
-            \Awz\Bx24Lead\ProvidersTable::update($primary, $data);
-        }
     }
 }

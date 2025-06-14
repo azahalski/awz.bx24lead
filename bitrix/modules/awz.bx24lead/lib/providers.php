@@ -105,7 +105,7 @@ class ProvidersTable extends DataManager{
 
     public static function validateHook(){
         return array(
-            new Fields\Validators\LengthValidator(3, 255),
+            new Fields\Validators\LengthValidator(3, 1625),
         );
     }
 
