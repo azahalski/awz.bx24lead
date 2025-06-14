@@ -9,9 +9,24 @@
 
 <!-- desc-end -->
 
+<!-- doc-start -->
+
+## поддерживаемые форматы хуков
+
+| Формат                                                  | Описание                                           |
+|---------------------------------------------------------|----------------------------------------------------|
+| https://portal.bitrix24.by/rest/1/секретка/crm.lead.add | Права: crm, catalog. Добавление лидов в Битрикс24  |
+| https://portal.bitrix24.by/rest/1/секретка/crm.deal.add | Права: crm, catalog. Добавление сделок в Битрикс24 |
+| Хук amoCRM                                              | Добавление сделок в amoCRM                         |
+
+**Формат ввода хука для amoCRM**
+`amo|https://portal.amocrm.ru/api/v4/leads|ключ`
+
+<!-- doc-end -->
+
 <!-- cl-start -->
 ## История версий
 
-https://github.com/zahalski/awz.bx24lead/blob/master/CHANGELOG.md
+https://github.com/azahalski/awz.bx24lead/blob/master/CHANGELOG.md
 
 <!-- cl-end -->
