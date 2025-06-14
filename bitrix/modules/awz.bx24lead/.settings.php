@@ -1,5 +1,13 @@
 <?php
 return [
+    'controllers' => array(
+        'value' => array(
+            'namespaces' => array(
+                '\\Awz\\Bx24Lead\\Api\\Controller' => 'api'
+            )
+        ),
+        'readonly' => true
+    ),
     'ui.entity-selector' => [
         'value' => [
             'entities' => [
