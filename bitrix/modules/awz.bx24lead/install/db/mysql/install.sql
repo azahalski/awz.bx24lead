@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `b_awz_bx24lead_providers` (
 `HOOK` varchar(255) NOT NULL,
 `NAME` varchar(255) NOT NULL,
 `ACTIVE` varchar(1) DEFAULT "N",
-`PRM` varchar(6255) DEFAULT NULL,
+`PRM` text DEFAULT NULL,
 PRIMARY KEY (`ID`),
 index ENTITY_ID_ACTIVE (ENTITY_ID, ACTIVE)
 ) AUTO_INCREMENT=1;

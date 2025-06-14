@@ -22,16 +22,14 @@ class awz_bx24lead extends CModule
         $arModuleVersion = array();
         include(__DIR__.'/version.php');
 
-        $dirs = explode('/',dirname(__DIR__ . '../'));
-        $this->MODULE_ID = array_pop($dirs);
-        unset($dirs);
-
 		$this->MODULE_VERSION = $arModuleVersion["VERSION"];
 		$this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
+
         $this->MODULE_NAME = Loc::getMessage("AWZ_BX24LEAD_MODULE_NAME");
         $this->MODULE_DESCRIPTION = Loc::getMessage("AWZ_BX24LEAD_MODULE_DESCRIPTION");
         $this->PARTNER_NAME = Loc::getMessage("AWZ_PARTNER_NAME");
-        $this->PARTNER_URI = Loc::getMessage("AWZ_PARTNER_URI");
+        $this->PARTNER_URI = "https://zahalski.dev/";
+
 		return true;
 	}
 
@@ -47,6 +45,11 @@ class awz_bx24lead extends CModule
 
         ModuleManager::RegisterModule($this->MODULE_ID);
 
+        $APPLICATION->IncludeAdminFile(
+            Loc::getMessage("AWZ_BX24LEAD_MODULE_NAME"),
+            $_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/'. $this->MODULE_ID .'/install/solution.php'
+        );
+
         return true;
     }
 
@@ -55,11 +58,13 @@ class awz_bx24lead extends CModule
         global $APPLICATION, $step;
 
         $step = intval($step);
-        if($step < 2) { //выводим предупреждение
-            $APPLICATION->IncludeAdminFile(Loc::getMessage('AWZ_BX24LEAD_INSTALL_TITLE'), $_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/'. $this->MODULE_ID .'/install/unstep.php');
+        if($step < 2) {
+            $APPLICATION->IncludeAdminFile(
+                Loc::getMessage('AWZ_BX24LEAD_INSTALL_TITLE'),
+                $_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/'. $this->MODULE_ID .'/install/unstep.php'
+            );
         }
         elseif($step == 2) {
-            //проверяем условие
             if($_REQUEST['save'] != 'Y' && !isset($_REQUEST['save'])) {
                 $this->UnInstallDB();
             }
@@ -67,8 +72,11 @@ class awz_bx24lead extends CModule
             $this->UnInstallEvents();
             $this->deleteAgents();
 
-            ModuleManager::UnRegisterModule($this->MODULE_ID);
+            if($_REQUEST['saveopts'] != 'Y' && !isset($_REQUEST['saveopts'])) {
+                \Bitrix\Main\Config\Option::delete($this->MODULE_ID);
+            }
 
+            ModuleManager::UnRegisterModule($this->MODULE_ID);
             return true;
         }
     }
@@ -76,23 +84,33 @@ class awz_bx24lead extends CModule
     function InstallDB()
     {
         global $DB, $DBType, $APPLICATION;
+        $connection = \Bitrix\Main\Application::getConnection();
         $this->errors = false;
-        $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/". $this->MODULE_ID ."/install/db/".mb_strtolower($DB->type)."/install.sql");
+        if(!$this->errors && !$DB->TableExists('b_'.implode('_', explode('.',$this->MODULE_ID)).'_providers')) {
+            $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/" . $this->MODULE_ID . "/install/db/".$connection->getType()."/install.sql");
+        }
+        if(!$this->errors && !$DB->TableExists(implode('_', explode('.',$this->MODULE_ID)).'_permission')) {
+            $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/" . $this->MODULE_ID . "/install/db/".$connection->getType()."/access.sql");
+        }
         if (!$this->errors) {
             return true;
         } else {
             $APPLICATION->ThrowException(implode("", $this->errors));
             return $this->errors;
         }
-        return true;
     }
 
     function UnInstallDB()
     {
         global $DB, $DBType, $APPLICATION;
-
+        $connection = \Bitrix\Main\Application::getConnection();
         $this->errors = false;
-        $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/". $this->MODULE_ID ."/install/db/".mb_strtolower($DB->type)."/uninstall.sql");
+        if (!$this->errors) {
+            $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/" . $this->MODULE_ID . "/install/db/" . $connection->getType() . "/uninstall.sql");
+        }
+        if (!$this->errors) {
+            $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/" . $this->MODULE_ID . "/install/db/" . $connection->getType() . "/unaccess.sql");
+        }
         if (!$this->errors) {
             return true;
         }
@@ -112,6 +130,14 @@ class awz_bx24lead extends CModule
         $eventManager->registerEventHandler('sale', 'OnSaleOrderSaved', $this->MODULE_ID,
             "\Awz\Bx24Lead\Handlers", "OnSaleOrderSaved"
         );
+        $eventManager->registerEventHandlerCompatible(
+            'main', 'OnAfterUserUpdate',
+            $this->MODULE_ID, '\\Awz\\Bx24lead\\Access\\Handlers', 'OnAfterUserUpdate'
+        );
+        $eventManager->registerEventHandlerCompatible(
+            'main', 'OnAfterUserAdd',
+            $this->MODULE_ID, '\\Awz\\Bx24lead\\Access\\Handlers', 'OnAfterUserUpdate'
+        );
         return true;
     }
 
@@ -126,17 +152,27 @@ class awz_bx24lead extends CModule
             'sale', 'OnSaleOrderSaved', $this->MODULE_ID,
             "\Awz\Bx24Lead\Handlers", "OnSaleOrderSaved"
         );
+        $eventManager->unRegisterEventHandler(
+            'sale', 'OnAfterUserUpdate',
+            $this->MODULE_ID, '\\Awz\\Bx24lead\\Access\\Handlers', 'OnAfterUserUpdate'
+        );
+        $eventManager->unRegisterEventHandler(
+            'sale', 'OnAfterUserAdd',
+            $this->MODULE_ID, '\\Awz\\Bx24lead\\Access\\Handlers', 'OnAfterUserUpdate'
+        );
         return true;
     }
 
     function InstallFiles()
     {
         CopyDirFiles($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/".$this->MODULE_ID."/install/admin/", $_SERVER['DOCUMENT_ROOT']."/bitrix/admin/", true);
+        CopyDirFiles($_SERVER['DOCUMENT_ROOT']."/bitrix/modules/".$this->MODULE_ID."/install/components/bx24lead.config.permissions/", $_SERVER['DOCUMENT_ROOT']."/bitrix/components/awz/bx24lead.config.permissions", true, true);
         return true;
     }
 
     function UnInstallFiles()
     {
+        DeleteDirFilesEx("/bitrix/components/awz/bx24lead.config.permissions");
         DeleteDirFiles(
             $_SERVER['DOCUMENT_ROOT']."/bitrix/modules/".$this->MODULE_ID."/install/admin",
             $_SERVER['DOCUMENT_ROOT']."/bitrix/admin"
@@ -149,6 +185,7 @@ class awz_bx24lead extends CModule
     }
 
     function deleteAgents() {
+        CAgent::RemoveModuleAgents("sale");
         return true;
     }
 

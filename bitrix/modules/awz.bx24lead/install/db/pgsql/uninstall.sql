@@ -1,0 +1,1 @@
+drop table if exists b_awz_bx24lead_providers;

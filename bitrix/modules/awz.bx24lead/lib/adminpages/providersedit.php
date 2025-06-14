@@ -8,6 +8,8 @@ use Awz\Admin\IForm;
 use Awz\Admin\IParams;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Data\Cache;
+use Awz\Bx24lead\Access\AccessController;
+use Awz\Bx24lead\Access\Custom\ActionDictionary;
 
 Loc::loadMessages(__FILE__);
 
@@ -17,12 +19,37 @@ class ProvidersEdit extends IForm implements IParams {
         parent::__construct($params);
     }
 
+    public static function disabled($param1, $param2 = []){
+        return false;
+    }
+
     public function trigerCheckActionAdd($func){
-        return $func;
+        if(AccessController::isEditSettings()) {
+            return $func;
+        }else{
+            return ["\\Awz\\Bx24Lead\\AdminPages\\ProvidersEdit", "disabled"];
+        }
     }
 
     public function trigerCheckActionUpdate($func){
-        return $func;
+        if(AccessController::isEditSettings()) {
+            return $func;
+        }else{
+            return ["\\Awz\\Bx24Lead\\AdminPages\\ProvidersEdit", "disabled"];
+        }
+    }
+
+    public function checkDelete($funcDel=null) {
+        $entity = $this->getParam("ENTITY");
+        if ($funcDel === null) {
+            $funcDel = array($entity, 'delete');
+        }
+        if ($this->getParam("ID")!==false && ($_REQUEST['action']=='delete') && \check_bitrix_sessid()) {
+            if(AccessController::isEditSettings()){
+                call_user_func($funcDel, $this->getParam("ID"));
+            }
+            \LocalRedirect($this->getParam("LIST_URL").$this->getParam("MODIF").'lang='.LANG);
+        }
     }
 
     public static function getTitle(): string
