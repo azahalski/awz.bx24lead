@@ -3,7 +3,7 @@ $moduleId = "awz.bx24lead";
 if(IsModuleInstalled($moduleId)) {
     $updater->CopyFiles(
         "install/components",
-        "components"
+        "components/awz"
     );
     $connection = \Bitrix\Main\Application::getConnection();
     if($connection->getType()=='mysql'){
