@@ -10,3 +10,6 @@ $MESS["AWZ_BX24LEAD_OPT_IB_TITLE"] = "Поддержка инфоблоков м
 $MESS["AWZ_BX24LEAD_OPT_SHOW_DESC"] = "Добавьте свойство в инфоблоки, 
 чтобы разрешить настройку автоматической отправки данных новых элементов в CRM";
 $MESS["AWZ_BX24LEAD_OPT_PROVIDERS"] = "Поддерживаемые провайдеры данных";
+$MESS['AWZ_BX24LEAD_OPT_NOBJ'] = 'Не откладывать отправку данных на Background Job';
+$MESS['AWZ_BX24LEAD_OPT_DEF'] = 'Общие настройки';
+$MESS['AWZ_BX24LEAD_OPT_MAXRETR'] = 'Макс попыток отправки данных (таймаут попыток: N*600сек)';

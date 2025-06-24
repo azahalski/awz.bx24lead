@@ -39,8 +39,8 @@ if($request->get('addiblock') && AccessController::isEditSettings()){
 
 if ($request->getRequestMethod()==='POST' && AccessController::isEditSettings() && $request->get('Update'))
 {
-
-    //Option::set($module_id, "test", $request->get("test")=='Y' ? 'Y' : 'N', "");
+    Option::set($module_id, "NOBJ", $request->get("NOBJ")=='Y' ? 'Y' : 'N', "");
+    Option::set($module_id, "MAXRETR", preg_replace("/([^0-9])/","",$request->get("MAXRETR")), "");
 }
 
 $aTabs = array();
@@ -65,6 +65,27 @@ $tabControl->Begin();
     $tabControl->BeginNextTab();
     \Bitrix\Main\UI\Extension::load("ui.alerts");
     ?>
+    <tr>
+        <td colspan="2" class="heading">
+            <?=Loc::getMessage('AWZ_BX24LEAD_OPT_DEF')?>
+        </td>
+    </tr>
+    <tr>
+        <td><?=Loc::getMessage('AWZ_BX24LEAD_OPT_NOBJ')?></td>
+        <td>
+            <?$val = Option::get($module_id, "NOBJ", "N","");?>
+            <input type="checkbox" value="Y" name="NOBJ" <?if ($val=="Y") echo "checked";?>></td>
+        </td>
+    </tr>
+    <?if(false){?>
+    <tr>
+        <td><?=Loc::getMessage('AWZ_BX24LEAD_OPT_MAXRETR')?></td>
+        <td>
+            <?$val = Option::get($module_id, "MAXRETR", "3","");?>
+            <input type="text" name="MAXRETR" value="<?=$val?>"></td>
+        </td>
+    </tr>
+    <?}?>
     <tr>
         <td colspan="2" class="heading">
             <?=Loc::getMessage('AWZ_BX24LEAD_OPT_PROVIDERS')?>

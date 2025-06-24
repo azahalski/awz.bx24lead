@@ -6,6 +6,7 @@ use Bitrix\Main\Web\HttpClient;
 use Bitrix\Main\Web\Json;
 use Bitrix\Main\Application;
 use Bitrix\Main\IO;
+use Bitrix\Main\Config\Option;
 
 class Agent {
 
