@@ -130,6 +130,9 @@ class awz_bx24lead extends CModule
         $eventManager->registerEventHandler('sale', 'OnSaleOrderSaved', $this->MODULE_ID,
             "\Awz\Bx24Lead\Handlers", "OnSaleOrderSaved"
         );
+        $eventManager->registerEventHandlerCompatible('form', 'onAfterResultAdd', $this->MODULE_ID,
+            "\Awz\Bx24Lead\Handlers", "onAfterResultAdd"
+        );
         $eventManager->registerEventHandlerCompatible(
             'main', 'OnAfterUserUpdate',
             $this->MODULE_ID, '\\Awz\\Bx24lead\\Access\\Handlers', 'OnAfterUserUpdate'
@@ -151,6 +154,10 @@ class awz_bx24lead extends CModule
         $eventManager->unRegisterEventHandler(
             'sale', 'OnSaleOrderSaved', $this->MODULE_ID,
             "\Awz\Bx24Lead\Handlers", "OnSaleOrderSaved"
+        );
+        $eventManager->unRegisterEventHandler(
+            'form', 'onAfterResultAdd', $this->MODULE_ID,
+            "\Awz\Bx24Lead\Handlers", "onAfterResultAdd"
         );
         $eventManager->unRegisterEventHandler(
             'sale', 'OnAfterUserUpdate',
