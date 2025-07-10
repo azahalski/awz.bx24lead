@@ -139,10 +139,19 @@ class Agent {
                 if(!isset($arFormData[$keyField]))
                     $arFormData[$keyField] = [];
                 foreach($keyValueAr as $vAr){
-                    $arFormData[$keyField][] = $vAr['USER_TEXT'];
+                    if($vAr['FIELD_TYPE']=='file' && $vAr['USER_FILE_ID']){
+                        $arFormData[$keyField][] = \CFile::getPath($vAr['USER_FILE_ID']);
+                    }elseif($vAr['FIELD_TYPE']=='dropdown' && $vAr['VALUE']){
+                        $arFormData[$keyField][] = $vAr['VALUE'];
+                    }else{
+                        $arFormData[$keyField][] = $vAr['USER_TEXT'];
+                    }
                 }
             }
+            $arFormData['arForm'] = $arForm;
             //echo'<pre>';print_r($arFormData);echo'</pre>';
+            //echo'<pre>';print_r($arForm);echo'</pre>';
+            // die();
         }
 
 
