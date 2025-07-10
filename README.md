@@ -26,6 +26,22 @@
 
 ![](https://zahalski.dev/images/modules/awz.bx24lead/001.png)
 
+### Страница отправки и http referer
+
+```php
+<?global $APPLICATION;?>
+Страница отправки: https://datastream.by<?=$APPLICATION->getCurPage(false);?> 
+Реферер: <?=\Bitrix\Main\Application::getInstance()->getContext()->getServer()->get('HTTP_REFERER')?>
+```
+
+### UTM метки (UTM_SOURCE)
+
+пример для модуля awz.utm - https://github.com/azahalski/awz.utm
+
+```php
+<?if(\Bitrix\Main\Loader::includeModule('awz.utm')){echo \Awz\Utm\App::getInstance()->getSource();}?>
+```
+
 ### Добавление товаров с ценами в б24
 
 ```php 
