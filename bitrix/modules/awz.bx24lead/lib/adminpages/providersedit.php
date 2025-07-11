@@ -131,6 +131,8 @@ class ProvidersEdit extends IForm implements IParams {
         $values = $this->getFieldValue($arField['NAME']);
         $fieldsHook = \Awz\Bx24Lead\Helper::getExtFieldParams($HOOK);
 
+        //echo'<pre>';print_r($fieldsHook);echo'</pre>';
+
         if(!$ID){
             ?><p style="color:red;"><?=Loc::getMessage('AWZ_BX24LEAD_PROVIDERS_EDIT_PRM_HELP')?></p><?php
         }else{
@@ -376,7 +378,16 @@ class ProvidersEdit extends IForm implements IParams {
                 <?foreach($fieldsHook as $code=>$field){
 
                     ?>
-                    <tr><th style="text-align:left;" colspan="2"><?=$field['CODE']?><?if($field['isMultiple']){?>[]<?}?> - <?=$field['type']?> - <?=$field['title']?></th></tr>
+                    <tr><th style="text-align:left;" colspan="2">
+                            <?=$field['CODE']?>
+                            <?
+                            $url = '';
+                            if($field['type'] == 'crm_status'){
+                                if(strpos($HOOK,'crm.lead.add')!==false || strpos($HOOK,'crm.deal.add')!==false){
+                                    $url = str_replace(['crm.lead.add','crm.deal.add'],"",$HOOK).'crm.status.list?filter[ENTITY_ID]='.$field['statusType'];
+                                }
+                            }?>
+                            <?if($field['isMultiple']){?>[]<?}?> - <?if($url){?><a href="<?=$url?>" target="_blank"><?}?><?=$field['type']?><?if($url){?></a><?}?> - <?=$field['title']?></th></tr>
                     <?foreach($field['items'] as $item){?>
                         <tr>
                             <td><?=$item['ID']?></td>
