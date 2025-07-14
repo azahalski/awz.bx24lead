@@ -66,6 +66,34 @@ echo serialize($products);
 ?>
 ```
 
+поиск по наименованию
+
+```php 
+<?
+$catalogBx24 = 24; //ид каталога в битрикс24
+
+$products = [];
+
+$el = \Bitrix\Iblock\ElementTable::getList([
+'select'=>['ID'], 
+'filter'=>['=NAME'=>$arParams['PROPERTY_PRODUCT'],'ACTIVE'=>"Y","=IBLOCK_ID"=>37],
+'limit'=>1
+])->fetch();
+
+if($el){
+$productId=\Awz\Bx24Lead\Helper::getProductBx24($el['ID'], $catalogBx24, $provider['MAIN_HOOK']);
+if($productId){
+$products[] = [
+                'PRODUCT_ID'=>$productId, 
+                'PRICE'=>$arParams['PROPERTY_PRICE'], 
+                'QUANTITY'=>$arParams['PROPERTY_KOLICHESTVO']
+            ];
+}
+        }
+echo serialize($products);
+?>
+```
+
 ### Добавление сквозной аналитики Битрикс24
 
 настройка поля
