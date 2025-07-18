@@ -192,7 +192,7 @@ class awz_bx24lead extends CModule
     }
 
     function deleteAgents() {
-        CAgent::RemoveModuleAgents("sale");
+        CAgent::RemoveModuleAgents($this->MODULE_ID);
         return true;
     }
 
