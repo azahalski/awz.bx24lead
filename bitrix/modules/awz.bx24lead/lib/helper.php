@@ -175,6 +175,45 @@ class Helper {
                 }catch (\Exception $e){
 
                 }
+            }elseif(strpos($url,'crm.item.add?entityTypeId=')!==false){
+                $httpClient = new HttpClient();
+                $httpClient->disableSslVerification();
+                $httpClient->setTimeout(5);
+                $httpClient->setStreamTimeout(5);
+                $res = $httpClient->get(str_replace('.add?','.fields?',$url));
+                try {
+                    $resData = Json::decode($res);
+
+                    if(!empty($resData['result']['fields'])){
+                        foreach($resData['result']['fields'] as $code=>$field){
+                            //echo'<pre>';print_r($field);echo'</pre>';
+                            if($field['isReadOnly']) continue;
+                            $field['CODE'] = $code;
+
+                            $fieldsHook[$code] = $field;
+
+                            if($fieldsHook[$code]['title'] == $fieldsHook[$code]['CODE']){
+                                if($fieldsHook[$code]['formLabel']){
+                                    $fieldsHook[$code]['title'] = $fieldsHook[$code]['formLabel'];
+                                }
+                            }
+                            if($fieldsHook[$code]['title'] == $fieldsHook[$code]['CODE']){
+                                if($fieldsHook[$code]['listLabel']){
+                                    $fieldsHook[$code]['title'] = $fieldsHook[$code]['listLabel'];
+                                }
+                            }
+                        }
+                        $fieldsHook['TRACE'] = [
+                            'CODE'=>'TRACE',
+                            'type'=>'string',
+                            'title'=>'Сквозная аналитика',
+                            'required'=>0
+                        ];
+                    }
+
+                }catch (\Exception $e){
+
+                }
             }
             elseif($urlData[0]=='amo'){
                 $httpClient = new HttpClient();
