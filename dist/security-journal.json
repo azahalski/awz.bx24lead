@@ -1,0 +1,873 @@
+{
+  "schema_version": "1.0",
+  "module": {
+    "code": "awz.bx24lead"
+  },
+  "current_state": {
+    "status": "needs_review",
+    "last_run_id": "awz.bx24lead-1789637821",
+    "archive_sha256": null,
+    "open_findings": 0,
+    "blocking_findings_open": 0,
+    "false_positive_findings": 1,
+    "accepted_risk_findings": 7,
+    "fixed_findings": 5,
+    "removed_findings": 0,
+    "total_findings": 13
+  },
+  "runs": [
+    {
+      "run_id": "awz.bx24lead-1789625392",
+      "created_at": "2026-09-17T06:11:28+00:00",
+      "archive_sha256": null,
+      "scanner_request_id": "awz.bx24lead-1789625392",
+      "input_summary": "Обнаружено 5 уязвимостей в 5 файлах при анализе 68 файлов модуля. Максимальная severity: high. Критическая уязвимость — выполнение произвольного PHP-кода через eval() в Helper::executePhp(), куда попадают пользовательские данные из webform-форм. Также выявлено массовое отключение SSL-верификации во всех исходящих HTTP-запросах и отсутствие аутентификации на AJAX-эндпоинте trace.",
+      "summary": {
+        "current_scan_findings": 5,
+        "severity_counts": {
+          "high": 1,
+          "medium": 4
+        },
+        "new_findings": 5,
+        "still_open_findings": 0,
+        "reopened_findings": 0,
+        "resolved_since_previous_run": 0
+      }
+    },
+    {
+      "run_id": "awz.bx24lead-1789637821",
+      "created_at": "2026-09-17T06:42:10+00:00",
+      "archive_sha256": null,
+      "scanner_request_id": "awz.bx24lead-1789637821",
+      "input_summary": "Обнаружено 8 уязвимостей в 6 файлах при анализе 68 файлов модуля. Максимальная severity: high.",
+      "summary": {
+        "current_scan_findings": 8,
+        "severity_counts": {
+          "high": 2,
+          "medium": 6
+        },
+        "new_findings": 8,
+        "still_open_findings": 0,
+        "reopened_findings": 0,
+        "resolved_since_previous_run": 5
+      }
+    }
+  ],
+  "findings": [
+    {
+      "journal_finding_id": "JF-00001",
+      "fingerprint": "d0cd658bd9b17ac5aae805cae1d9f8b1",
+      "type": "RCE",
+      "severity": "high",
+      "status": "fixed",
+      "first_seen_run_id": "awz.bx24lead-1789625392",
+      "last_seen_run_id": "awz.bx24lead-1789625392",
+      "resolved_run_id": "awz.bx24lead-1789637821",
+      "original_location": {
+        "file": "lib/helper.php",
+        "line": "452-458"
+      },
+      "current_location": null,
+      "latest_vulnerability": {
+        "file": "lib/helper.php",
+        "line": "452-458",
+        "type": "RCE",
+        "severity": "high",
+        "description": "Подтверждена: метод executePhp() использует eval() для выполнения произвольного PHP-кода. Функция вызывается из lib/agent.php:311, где значения полей сущностей (webform, iblock, order) проверяются на наличие '<?' и передаются в eval(). Данные webform-форм (пользовательский ввод) попадают в $valuesList (agent.php:244-252), затем в $prepareData (agent.php:274-301), и при наличии '<?' в строке выполняются через eval(). Атакующий может отправить webform-форму с полем, содержащим '<?php system(\"id\"); ?>', что приведёт к выполнению произвольного кода на сервере.",
+        "recommendation": "Убрать использование eval(). Заменить на безопасный шаблонизатор (например, Twig с sandbox) или на макросную подстановку без выполнения кода. Если выполнение PHP-кода из полей действительно необходимо — ограничить доступ к executePhp() только доверенными источниками данных и добавить строгую валидацию/песочницу.",
+        "fix": "Before:\n$result = eval('use \\Bitrix\\Main\\Mail\\EventMessageThemeCompiler; ob_start();?>' . $code . '<? return ob_get_clean();');\n\nAfter:\n// Заменить eval на безопасную подстановку макросов без выполнения кода.\n// Если нужен динамический код — использовать Twig с SandboxExtension:\n$loader = new \\Twig\\Loader\\ArrayLoader(['tpl' => $code]);\n$twig = new \\Twig\\Environment($loader, ['sandbox' => true]);\n$twig->addExtension(new \\Twig\\Extension\\SandboxExtension(true, [], []));\n$result = $twig->render('tpl', $arParams);",
+        "reviewed": {
+          "oldSeverity": "high",
+          "newSeverity": "high",
+          "changed": false,
+          "category": "confirmed-backdoor",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "block-and-escalate-security-review",
+          "confidence": "medium",
+          "rationale": "Kept/raised as high because the finding combines suspicious obfuscation with an execution, network, filesystem, or exfiltration sink. Obfuscation alone would not be sufficient."
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789625392",
+          "event": "detected",
+          "at": "2026-09-17T06:11:28+00:00",
+          "location": {
+            "file": "lib/helper.php",
+            "line": "452-458"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "resolved",
+          "at": "2026-09-17T06:42:10+00:00",
+          "status": "fixed"
+        }
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1789637821",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
+    },
+    {
+      "journal_finding_id": "JF-00002",
+      "fingerprint": "442e076cca08000a2e65c167bd8b1603",
+      "type": "Information Disclosure",
+      "severity": "medium",
+      "status": "fixed",
+      "first_seen_run_id": "awz.bx24lead-1789625392",
+      "last_seen_run_id": "awz.bx24lead-1789625392",
+      "resolved_run_id": "awz.bx24lead-1789637821",
+      "original_location": {
+        "file": "lib/agent.php",
+        "line": "336,353,395,429,559,586,613,639,661,681,727,766,813"
+      },
+      "current_location": null,
+      "latest_vulnerability": {
+        "file": "lib/agent.php",
+        "line": "336,353,395,429,559,586,613,639,661,681,727,766,813",
+        "type": "Information Disclosure",
+        "severity": "medium",
+        "description": "Подозрение: во всех вызовах HttpClient для внешних API (amoCRM, Bitrix24) используется disableSslVerification(), что отключает проверку SSL-сертификатов. Это делает все исходящие HTTPS-запросы уязвимыми к атакам Man-in-the-Middle: атакующий в сети может подменить сертификат и перехватить/изменить данные, включая Bearer-токены авторизации (строки 339, 356, 398, 432).",
+        "recommendation": "Убрать все вызовы disableSslVerification(). Убедиться, что на сервере установлены актуальные CA-сертификаты. Если необходимо подключаться к внутренним API с самоподписанными сертификатами — использовать CURLOPT_CAINFO с путём к конкретному сертификату, а не отключать проверку полностью.",
+        "fix": "Before:\n$client = new HttpClient();\n$client->disableSslVerification();\n$client->setTimeout(5);\n\nAfter:\n$client = new HttpClient();\n$client->setTimeout(5);\n// SSL-верификация остаётся включённой по умолчанию",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "potential-api-token-exposure",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "validate-token-kind-and-keep-server-side",
+          "confidence": "medium",
+          "rationale": "Kept as a real issue if the value is an OAuth/API-Key/bearer-style secret or if transport/authentication handling can expose such secrets. If the field is only a public widget/model identifier, this finding should be removed or downgraded after code/value validation."
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789625392",
+          "event": "detected",
+          "at": "2026-09-17T06:11:28+00:00",
+          "location": {
+            "file": "lib/agent.php",
+            "line": "336,353,395,429,559,586,613,639,661,681,727,766,813"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "resolved",
+          "at": "2026-09-17T06:42:10+00:00",
+          "status": "fixed"
+        }
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1789637821",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
+    },
+    {
+      "journal_finding_id": "JF-00003",
+      "fingerprint": "250bdef18b00b8ff1de1333f13e73830",
+      "type": "Information Disclosure",
+      "severity": "medium",
+      "status": "fixed",
+      "first_seen_run_id": "awz.bx24lead-1789625392",
+      "last_seen_run_id": "awz.bx24lead-1789625392",
+      "resolved_run_id": "awz.bx24lead-1789637821",
+      "original_location": {
+        "file": "lib/helper.php",
+        "line": "72,135,180,220"
+      },
+      "current_location": null,
+      "latest_vulnerability": {
+        "file": "lib/helper.php",
+        "line": "72,135,180,220",
+        "type": "Information Disclosure",
+        "severity": "medium",
+        "description": "Подозрение: в методе getExtFieldParams() все вызовы HttpClient для получения списка полей из внешних API (Bitrix24, amoCRM) используют disableSslVerification(). Это позволяет атакующему в сети перехватить трафик и подменить данные о полях, что может привести к утечке Bearer-токенов (строка 223) или подмене структуры данных.",
+        "recommendation": "Убрать все вызовы disableSslVerification(). Использовать стандартную SSL-верификацию с актуальным пакетом CA-сертификатов.",
+        "fix": "Before:\n$httpClient = new HttpClient();\n$httpClient->disableSslVerification();\n$httpClient->setTimeout(5);\n\nAfter:\n$httpClient = new HttpClient();\n$httpClient->setTimeout(5);",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "potential-api-token-exposure",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "validate-token-kind-and-keep-server-side",
+          "confidence": "medium",
+          "rationale": "Kept as a real issue if the value is an OAuth/API-Key/bearer-style secret or if transport/authentication handling can expose such secrets. If the field is only a public widget/model identifier, this finding should be removed or downgraded after code/value validation."
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789625392",
+          "event": "detected",
+          "at": "2026-09-17T06:11:28+00:00",
+          "location": {
+            "file": "lib/helper.php",
+            "line": "72,135,180,220"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "resolved",
+          "at": "2026-09-17T06:42:10+00:00",
+          "status": "fixed"
+        }
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1789637821",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
+    },
+    {
+      "journal_finding_id": "JF-00004",
+      "fingerprint": "a83e944c3c8b38cdfa36994b978a560a",
+      "type": "Information Disclosure",
+      "severity": "medium",
+      "status": "fixed",
+      "first_seen_run_id": "awz.bx24lead-1789625392",
+      "last_seen_run_id": "awz.bx24lead-1789625392",
+      "resolved_run_id": "awz.bx24lead-1789637821",
+      "original_location": {
+        "file": "lib/bx24catalog.php",
+        "line": "320"
+      },
+      "current_location": null,
+      "latest_vulnerability": {
+        "file": "lib/bx24catalog.php",
+        "line": "320",
+        "type": "Information Disclosure",
+        "severity": "medium",
+        "description": "Подозрение: в методе sendRequest() HttpClient создаётся с disableSslVerification(). Все запросы к Bitrix24 API (включая передачу access_token в URL на строке 294) выполняются без проверки SSL-сертификата, что делает их уязвимыми к MITM-атакам и утечке токена доступа.",
+        "recommendation": "Убрать disableSslVerification(). Обеспечить корректную SSL-верификацию для всех запросов к Bitrix24 API.",
+        "fix": "Before:\n$httpClient = new HttpClient();\n$httpClient->disableSslVerification();\n\nAfter:\n$httpClient = new HttpClient();",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "potential-api-token-exposure",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "validate-token-kind-and-keep-server-side",
+          "confidence": "medium",
+          "rationale": "Kept as a real issue if the value is an OAuth/API-Key/bearer-style secret or if transport/authentication handling can expose such secrets. If the field is only a public widget/model identifier, this finding should be removed or downgraded after code/value validation."
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789625392",
+          "event": "detected",
+          "at": "2026-09-17T06:11:28+00:00",
+          "location": {
+            "file": "lib/bx24catalog.php",
+            "line": "320"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "resolved",
+          "at": "2026-09-17T06:42:10+00:00",
+          "status": "fixed"
+        }
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1789637821",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
+    },
+    {
+      "journal_finding_id": "JF-00005",
+      "fingerprint": "308090fa6dc4016f9bd68e6c5832123d",
+      "type": "Authentication Bypass",
+      "severity": "medium",
+      "status": "fixed",
+      "first_seen_run_id": "awz.bx24lead-1789625392",
+      "last_seen_run_id": "awz.bx24lead-1789625392",
+      "resolved_run_id": "awz.bx24lead-1789637821",
+      "original_location": {
+        "file": "lib/api/controller/trace.php",
+        "line": "25-34"
+      },
+      "current_location": null,
+      "latest_vulnerability": {
+        "file": "lib/api/controller/trace.php",
+        "line": "25-34",
+        "type": "Authentication Bypass",
+        "severity": "medium",
+        "description": "Подозрение: действие 'save' в контроллере Trace имеет префильтры Scope(Scope::AJAX) и Sign(array('time')), но отсутствует Authentication и Csrf. Параметр TRACE из запроса сохраняется в сессию без валидации (lib/bx24trace.php:14-15: $session->set('BX24_TRACE', $request->get('TRACE'))). Хотя Sign-фильтр проверяет подпись, отсутствие аутентификации позволяет любому вызывающему AJAX-запрос с валидной подписью записывать произвольные данные в сессию.",
+        "recommendation": "Добавить префильтр Authentication для действия 'save'. Валидировать и санитизировать параметр TRACE перед сохранением в сессию (ограничить длину, проверить формат JSON).",
+        "fix": "Before:\n'save' => array(\n    'prefilters' => array(\n        new Scope(Scope::AJAX),\n        new Sign(array('time'))\n    )\n)\n\nAfter:\n'save' => array(\n    'prefilters' => array(\n        new ActionFilter\\Authentication(),\n        new Scope(Scope::AJAX),\n        new Sign(array('time'))\n    )\n)",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "medium",
+          "changed": true,
+          "category": "authenticated-or-limited-authorization-bypass",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "verify-on-latest-version",
+          "confidence": "medium",
+          "rationale": "Set to medium because the finding describes authorization bypass or privilege misuse, but not a direct high-impact IDOR, financial bug, or confirmed account takeover in the journal text."
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789625392",
+          "event": "detected",
+          "at": "2026-09-17T06:11:28+00:00",
+          "location": {
+            "file": "lib/api/controller/trace.php",
+            "line": "25-34"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "resolved",
+          "at": "2026-09-17T06:42:10+00:00",
+          "status": "fixed"
+        }
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1789637821",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
+    },
+    {
+      "journal_finding_id": "JF-00006",
+      "fingerprint": "0dadbc23fc82852633cd50d37320bfbb",
+      "type": "RCE",
+      "severity": "high",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1789637821",
+      "last_seen_run_id": "awz.bx24lead-1789637821",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/helper.php",
+        "line": "456"
+      },
+      "current_location": {
+        "file": "lib/helper.php",
+        "line": "456"
+      },
+      "latest_vulnerability": {
+        "file": "lib/helper.php",
+        "line": "456",
+        "type": "RCE",
+        "severity": "high",
+        "description": "Подтверждена RCE через eval(). Функция Helper::executePhp() выполняет произвольный PHP-код через eval(), где $code берется из базы данных (через агентов B2B/Sale/Form). Поле БД может содержать PHP-код, внедренный пользователем через формы (например, кастомные поля инфоблока/лида/сделки). Цепочка: пользователь вводит код в форму -> сохранение в БД -> агент обрабатывает значение через executePhp() -> eval() выполняет код. Это дает удаленное выполнение кода через любые управляемые пользователем поля, содержащие '<?'.",
+        "recommendation": "Удалить eval(). Использовать безопасные альтернативы для выполнения динамического кода: например, precompiled strategy pattern с allowlist методов, или json-конфигурации вместо PHP-кода.",
+        "fix": "Before:\n$result = eval('use \\Bitrix\\Main\\Mail\\EventMessageThemeCompiler; ob_start();?>' . $code . '<? return ob_get_clean();');\n\nAfter:\n// Использовать безопасную альтернативу вместо eval()\n// Например, precompiled template engine или allowlist методов\n$result = self::executeSafeCode($code, $arParams, $provider);",
+        "reviewed": {
+          "oldSeverity": "high",
+          "newSeverity": "high",
+          "changed": false,
+          "category": "confirmed-backdoor",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "block-and-escalate-security-review",
+          "confidence": "medium",
+          "rationale": "Kept/raised as high because the finding combines suspicious obfuscation with an execution, network, filesystem, or exfiltration sink. Obfuscation alone would not be sufficient."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "detected",
+          "at": "2026-09-17T06:42:10+00:00",
+          "location": {
+            "file": "lib/helper.php",
+            "line": "456"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00007",
+      "fingerprint": "44f3cda2dd973c596678e8a1efb74cf7",
+      "type": "RCE",
+      "severity": "high",
+      "status": "false_positive",
+      "first_seen_run_id": "awz.bx24lead-1789637821",
+      "last_seen_run_id": "awz.bx24lead-1789637821",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/agent.php",
+        "line": "314"
+      },
+      "current_location": {
+        "file": "lib/agent.php",
+        "line": "314"
+      },
+      "latest_vulnerability": {
+        "file": "lib/agent.php",
+        "line": "314",
+        "type": "RCE",
+        "severity": "high",
+        "description": "Подтверждена RCE через цепочку: executePhp() -> eval() + unserialize(). На строке 314 вызывается Helper::executePhp($v, ...) где $v - значение из БД (проверяется strpos($v,'<?')!==false). Затем на строке 315 выполняется unserialize($v, [...]) над тем же значением. Если $v содержит PHP-код с сериализованными данными, это двойная обработка. Код выполняется через eval() (в helper.php:456), что позволяет выполнить произвольный PHP.",
+        "recommendation": "Удалить eval(). Разделить обработку PHP-кода и сериализованных данных. Использовать allowed_classes => false и валидацию содержимого.",
+        "fix": "Before:\nif(is_string($v) && strpos($v,'<?')!==false){\n    $v = Helper::executePhp($v, $valuesList, $provider);\n    $unserTest = unserialize($v, ['allowed_classes' => false]);\n}\n\nAfter:\n// Разделить обработку кода и сериализованных данных\nif(is_string($v) && strpos($v,'<?')!==false){\n    // Безопасная обработка без eval()\n    $v = self::processTemplateSafely($v, $valuesList, $provider);\n}",
+        "reviewed": {
+          "oldSeverity": "high",
+          "newSeverity": "high",
+          "changed": false,
+          "category": "confirmed-backdoor",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "block-and-escalate-security-review",
+          "confidence": "medium",
+          "rationale": "Kept/raised as high because the finding combines suspicious obfuscation with an execution, network, filesystem, or exfiltration sink. Obfuscation alone would not be sufficient."
+        },
+        "partner_disposition": {
+          "status": "false_positive",
+          "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "detected",
+          "at": "2026-09-17T06:42:10+00:00",
+          "location": {
+            "file": "lib/agent.php",
+            "line": "314"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T06:55:51+00:00",
+          "status": "false_positive",
+          "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00008",
+      "fingerprint": "ca1305c320764109c208c7515abc8551",
+      "type": "Insecure Deserialization",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1789637821",
+      "last_seen_run_id": "awz.bx24lead-1789637821",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/api/filters/sign.php",
+        "line": "30-31"
+      },
+      "current_location": {
+        "file": "lib/api/filters/sign.php",
+        "line": "30-31"
+      },
+      "latest_vulnerability": {
+        "file": "lib/api/filters/sign.php",
+        "line": "30-31",
+        "type": "Insecure Deserialization",
+        "severity": "medium",
+        "description": "Подозрение: Insecure Deserialization. unserialize(base64_decode($params)) на строке 31, где $params берется из $_REQUEST['signed'] (строка 30). Хотя используется allowed_classes => false, входные данные контролируются пользователем через API-запрос. Signer->unsign() возвращает подпись, которая декодируется и десериализуется. Атакующий может отправить специально созданную подпись для проверки POP-цепочек.",
+        "recommendation": "Использовать json_decode() вместо unserialize(). Если unserialize необходим - добавить проверку подписи ДО десериализации и использовать strict allowed_classes.",
+        "fix": "Before:\n$params = $signer->unsign($this->getAction()->getController()->getRequest()->get('signed'));\n$params = unserialize(base64_decode($params), [\"allowed_classes\" => false]);\n\nAfter:\n$signedData = $this->getAction()->getController()->getRequest()->get('signed');\n$params = $signer->unsign($signedData);\n// Использовать json_decode вместо unserialize\n$params = json_decode(base64_decode($params), true);",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "kept-as-reported",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "fix",
+          "confidence": "medium",
+          "rationale": "Severity left unchanged after review; no stronger Bitrix/BUS-specific downgrade condition was identified from the journal text alone."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "detected",
+          "at": "2026-09-17T06:42:10+00:00",
+          "location": {
+            "file": "lib/api/filters/sign.php",
+            "line": "30-31"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00009",
+      "fingerprint": "4c90757ae4c4bc193135e33912dab014",
+      "type": "SSRF",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1789637821",
+      "last_seen_run_id": "awz.bx24lead-1789637821",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/bx24catalog.php",
+        "line": "319-320"
+      },
+      "current_location": {
+        "file": "lib/bx24catalog.php",
+        "line": "319-320"
+      },
+      "latest_vulnerability": {
+        "file": "lib/bx24catalog.php",
+        "line": "319-320",
+        "type": "SSRF",
+        "severity": "medium",
+        "description": "Подозрение: SSRF with insecure TLS. HttpClient создается без валидации хоста на строке 319, и SSL-верификация отключена на строке 320 через disableSslVerification(). URL формируется из $url который может быть внешним (из провайдера/БД). Отключение SSL-верификации делает соединение уязвимым к MITM-атакам. В сочетании с возможностью управления URL это позволяет perform SSRF с перехватом данных.",
+        "recommendation": "Включить SSL-верификацию (убрать disableSslVerification()). Добавить allowlist доменов Bitrix24. Проверять схему URL (только https://).",
+        "fix": "Before:\n$httpClient = new HttpClient();\n$httpClient->disableSslVerification();\n\nAfter:\n$httpClient = new HttpClient();\n// Удалить disableSslVerification()\n// Добавить валидацию хоста\n$parsedHost = parse_url($url, PHP_URL_HOST);\nif (!in_array($parsedHost, self::ALLOWED_HOSTS)) {\n    throw new Exception('Invalid host');\n}",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "kept-as-reported",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "fix",
+          "confidence": "medium",
+          "rationale": "Severity left unchanged after review; no stronger Bitrix/BUS-specific downgrade condition was identified from the journal text alone."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "detected",
+          "at": "2026-09-17T06:42:10+00:00",
+          "location": {
+            "file": "lib/bx24catalog.php",
+            "line": "319-320"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00010",
+      "fingerprint": "dd48641b815c4dce56b638e01387d1da",
+      "type": "SSRF",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1789637821",
+      "last_seen_run_id": "awz.bx24lead-1789637821",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/agent.php",
+        "line": "338-339,355-356,397-398,431-432,562-563,589-590,616-617,642-643,664-665,684-685,730-731,769-770,816-817"
+      },
+      "current_location": {
+        "file": "lib/agent.php",
+        "line": "338-339,355-356,397-398,431-432,562-563,589-590,616-617,642-643,664-665,684-685,730-731,769-770,816-817"
+      },
+      "latest_vulnerability": {
+        "file": "lib/agent.php",
+        "line": "338-339,355-356,397-398,431-432,562-563,589-590,616-617,642-643,664-665,684-685,730-731,769-770,816-817",
+        "type": "SSRF",
+        "severity": "medium",
+        "description": "Подозрение: Multiple SSRF via HttpClient with disabled SSL verification. В классе Agent множество мест (строки ~338, 355, 397, 431, 562, 589, 616, 642, 664, 684, 730, 769, 816) где создаётся HttpClient с disableSslVerification(). URL берется из $provider['MAIN_HOOK'] и $provider['HOOK'] которые хранятся в БД и могут быть изменены администратором модуля. Это позволяет perform SSRF к внутренним ресурсам с отключённой проверкой TLS.",
+        "recommendation": "Удалить disableSslVerification(). Добавить валидацию хоста URL. Использовать allowlist доменов Bitrix24.",
+        "fix": "Before:\n$client = new HttpClient();\n$client->disableSslVerification();\n\nAfter:\n$client = new HttpClient();\n// Удалить disableSslVerification()\n// Валидировать хост перед запросом",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "kept-as-reported",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "fix",
+          "confidence": "medium",
+          "rationale": "Severity left unchanged after review; no stronger Bitrix/BUS-specific downgrade condition was identified from the journal text alone."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "detected",
+          "at": "2026-09-17T06:42:10+00:00",
+          "location": {
+            "file": "lib/agent.php",
+            "line": "338-339,355-356,397-398,431-432,562-563,589-590,616-617,642-643,664-665,684-685,730-731,769-770,816-817"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00011",
+      "fingerprint": "e3c00560fdbf5478917d5f537f2c5947",
+      "type": "CSRF",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1789637821",
+      "last_seen_run_id": "awz.bx24lead-1789637821",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/api/controller/trace.php",
+        "line": "25-34"
+      },
+      "current_location": {
+        "file": "lib/api/controller/trace.php",
+        "line": "25-34"
+      },
+      "latest_vulnerability": {
+        "file": "lib/api/controller/trace.php",
+        "line": "25-34",
+        "type": "CSRF",
+        "severity": "medium",
+        "description": "Подтверждён CSRF в контроллере Trace. Метод configureActions() на строке 25 возвращает prefilters только с Scope(AJAX) и Sign(filter), но БЕЗ ActionFilter\\Csrf(). State-changing операция saveAction() доступна без CSRF-токена. Авторизованный пользователь может быть принуждён к выполнению запроса к api/trace.php?action=save.",
+        "recommendation": "Добавить ActionFilter\\Csrf() в prefilters для action save.",
+        "fix": "Before:\nreturn array(\n    'save' => array(\n        'prefilters' => array(\n            new Scope(Scope::AJAX),\n            new Sign(array('time'))\n        )\n    )\n);\n\nAfter:\nreturn array(\n    'save' => array(\n        'prefilters' => array(\n            new Scope(Scope::AJAX),\n            new Sign(array('time')),\n            new \\Bitrix\\Main\\Engine\\ActionFilter\\Csrf()\n        )\n    )\n);",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "csrf-state-change",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "add-sessid-and-owner-checks",
+          "confidence": "medium",
+          "rationale": "Kept as medium because the finding describes state change without check_bitrix_sessid; raise only if cross-user deletion or higher-impact state change is confirmed."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "detected",
+          "at": "2026-09-17T06:42:10+00:00",
+          "location": {
+            "file": "lib/api/controller/trace.php",
+            "line": "25-34"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00012",
+      "fingerprint": "3910d9f49275059cba8de7f0d44e267b",
+      "type": "Open Redirect",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1789637821",
+      "last_seen_run_id": "awz.bx24lead-1789637821",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/adminpages/providersedit.php",
+        "line": "51"
+      },
+      "current_location": {
+        "file": "lib/adminpages/providersedit.php",
+        "line": "51"
+      },
+      "latest_vulnerability": {
+        "file": "lib/adminpages/providersedit.php",
+        "line": "51",
+        "type": "Open Redirect",
+        "severity": "medium",
+        "description": "Подозрение: Open Redirect. LocalRedirect() на строке 51 перенаправляет на URL собранный из параметров: $this->getParam('LIST_URL').$this->getParam('MODIF').'lang='.LANG. LIST_URL и MODIF берутся из GET-параметров страницы админки. Хотя это админ-панель (требует авторизации), неавторизованный пользователь может попытаться фишинговую ссылку через URL с параметрами.",
+        "recommendation": "Валидировать URL перед редиректом - проверять что начинается с '/' и не '//'.",
+        "fix": "Before:\n\\LocalRedirect($this->getParam('LIST_URL').$this->getParam('MODIF').'lang='.LANG);\n\nAfter:\n$redirectUrl = $this->getParam('LIST_URL').$this->getParam('MODIF').'lang='.LANG;\n// Валидация локального URL\nif (strpos($redirectUrl, '//') !== 0 && strpos($redirectUrl, 'http') !== 0) {\n    \\LocalRedirect($redirectUrl);\n}",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "medium",
+          "changed": true,
+          "category": "public-open-redirect",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "allowlist-local-redirects",
+          "confidence": "medium",
+          "rationale": "Kept as medium because request-controlled backurl redirect can support phishing after login; restrict to relative/local URLs."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "detected",
+          "at": "2026-09-17T06:42:10+00:00",
+          "location": {
+            "file": "lib/adminpages/providersedit.php",
+            "line": "51"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00013",
+      "fingerprint": "0f14ce37122a3f52c43fbcf8cf9e9b1f",
+      "type": "Open Redirect",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1789637821",
+      "last_seen_run_id": "awz.bx24lead-1789637821",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "options.php",
+        "line": "57"
+      },
+      "current_location": {
+        "file": "options.php",
+        "line": "57"
+      },
+      "latest_vulnerability": {
+        "file": "options.php",
+        "line": "57",
+        "type": "Open Redirect",
+        "severity": "medium",
+        "description": "Подозрение: Open Redirect через LocalRedirect($saveUrl) на строке 57. $saveUrl формируется из htmlspecialcharsbx($module_id) что безопасно (экранировано). Однако если $APPLICATION->GetCurPage() вернёт URL с query-параметрами содержащими //, возможен protocol-relative redirect. Требует авторизации в админке.",
+        "recommendation": "Валидировать URL перед редиректом.",
+        "fix": "Before:\nLocalRedirect($saveUrl);\n\nAfter:\n// Валидация перед редиректом\nif (strpos($saveUrl, '//') !== 0) {\n    LocalRedirect($saveUrl);\n}",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "medium",
+          "changed": true,
+          "category": "public-open-redirect",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "allowlist-local-redirects",
+          "confidence": "medium",
+          "rationale": "Kept as medium because request-controlled backurl redirect can support phishing after login; restrict to relative/local URLs."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "detected",
+          "at": "2026-09-17T06:42:10+00:00",
+          "location": {
+            "file": "options.php",
+            "line": "57"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    }
+  ]
+}

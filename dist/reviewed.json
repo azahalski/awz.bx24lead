@@ -1,0 +1,290 @@
+{
+  "success": true,
+  "requestId": "awz.bx24lead-1789637821",
+  "data": {
+    "vulnerabilities": [
+      {
+        "file": "lib/helper.php",
+        "line": "456",
+        "type": "RCE",
+        "severity": "high",
+        "description": "Подтверждена RCE через eval(). Функция Helper::executePhp() выполняет произвольный PHP-код через eval(), где $code берется из базы данных (через агентов B2B/Sale/Form). Поле БД может содержать PHP-код, внедренный пользователем через формы (например, кастомные поля инфоблока/лида/сделки). Цепочка: пользователь вводит код в форму -> сохранение в БД -> агент обрабатывает значение через executePhp() -> eval() выполняет код. Это дает удаленное выполнение кода через любые управляемые пользователем поля, содержащие '<?'.",
+        "recommendation": "Удалить eval(). Использовать безопасные альтернативы для выполнения динамического кода: например, precompiled strategy pattern с allowlist методов, или json-конфигурации вместо PHP-кода.",
+        "fix": "Before:\n$result = eval('use \\Bitrix\\Main\\Mail\\EventMessageThemeCompiler; ob_start();?>' . $code . '<? return ob_get_clean();');\n\nAfter:\n// Использовать безопасную альтернативу вместо eval()\n// Например, precompiled template engine или allowlist методов\n$result = self::executeSafeCode($code, $arParams, $provider);",
+        "reviewed": {
+          "oldSeverity": "high",
+          "newSeverity": "high",
+          "changed": false,
+          "category": "confirmed-backdoor",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "block-and-escalate-security-review",
+          "confidence": "medium",
+          "rationale": "Kept/raised as high because the finding combines suspicious obfuscation with an execution, network, filesystem, or exfiltration sink. Obfuscation alone would not be sufficient."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      {
+        "file": "lib/agent.php",
+        "line": "314",
+        "type": "RCE",
+        "severity": "high",
+        "description": "Подтверждена RCE через цепочку: executePhp() -> eval() + unserialize(). На строке 314 вызывается Helper::executePhp($v, ...) где $v - значение из БД (проверяется strpos($v,'<?')!==false). Затем на строке 315 выполняется unserialize($v, [...]) над тем же значением. Если $v содержит PHP-код с сериализованными данными, это двойная обработка. Код выполняется через eval() (в helper.php:456), что позволяет выполнить произвольный PHP.",
+        "recommendation": "Удалить eval(). Разделить обработку PHP-кода и сериализованных данных. Использовать allowed_classes => false и валидацию содержимого.",
+        "fix": "Before:\nif(is_string($v) && strpos($v,'<?')!==false){\n    $v = Helper::executePhp($v, $valuesList, $provider);\n    $unserTest = unserialize($v, ['allowed_classes' => false]);\n}\n\nAfter:\n// Разделить обработку кода и сериализованных данных\nif(is_string($v) && strpos($v,'<?')!==false){\n    // Безопасная обработка без eval()\n    $v = self::processTemplateSafely($v, $valuesList, $provider);\n}",
+        "reviewed": {
+          "oldSeverity": "high",
+          "newSeverity": "high",
+          "changed": false,
+          "category": "confirmed-backdoor",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "block-and-escalate-security-review",
+          "confidence": "medium",
+          "rationale": "Kept/raised as high because the finding combines suspicious obfuscation with an execution, network, filesystem, or exfiltration sink. Obfuscation alone would not be sufficient."
+        },
+        "partner_disposition": {
+          "status": "false_positive",
+          "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      {
+        "file": "lib/api/filters/sign.php",
+        "line": "30-31",
+        "type": "Insecure Deserialization",
+        "severity": "medium",
+        "description": "Подозрение: Insecure Deserialization. unserialize(base64_decode($params)) на строке 31, где $params берется из $_REQUEST['signed'] (строка 30). Хотя используется allowed_classes => false, входные данные контролируются пользователем через API-запрос. Signer->unsign() возвращает подпись, которая декодируется и десериализуется. Атакующий может отправить специально созданную подпись для проверки POP-цепочек.",
+        "recommendation": "Использовать json_decode() вместо unserialize(). Если unserialize необходим - добавить проверку подписи ДО десериализации и использовать strict allowed_classes.",
+        "fix": "Before:\n$params = $signer->unsign($this->getAction()->getController()->getRequest()->get('signed'));\n$params = unserialize(base64_decode($params), [\"allowed_classes\" => false]);\n\nAfter:\n$signedData = $this->getAction()->getController()->getRequest()->get('signed');\n$params = $signer->unsign($signedData);\n// Использовать json_decode вместо unserialize\n$params = json_decode(base64_decode($params), true);",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "kept-as-reported",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "fix",
+          "confidence": "medium",
+          "rationale": "Severity left unchanged after review; no stronger Bitrix/BUS-specific downgrade condition was identified from the journal text alone."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      {
+        "file": "lib/bx24catalog.php",
+        "line": "319-320",
+        "type": "SSRF",
+        "severity": "medium",
+        "description": "Подозрение: SSRF with insecure TLS. HttpClient создается без валидации хоста на строке 319, и SSL-верификация отключена на строке 320 через disableSslVerification(). URL формируется из $url который может быть внешним (из провайдера/БД). Отключение SSL-верификации делает соединение уязвимым к MITM-атакам. В сочетании с возможностью управления URL это позволяет perform SSRF с перехватом данных.",
+        "recommendation": "Включить SSL-верификацию (убрать disableSslVerification()). Добавить allowlist доменов Bitrix24. Проверять схему URL (только https://).",
+        "fix": "Before:\n$httpClient = new HttpClient();\n$httpClient->disableSslVerification();\n\nAfter:\n$httpClient = new HttpClient();\n// Удалить disableSslVerification()\n// Добавить валидацию хоста\n$parsedHost = parse_url($url, PHP_URL_HOST);\nif (!in_array($parsedHost, self::ALLOWED_HOSTS)) {\n    throw new Exception('Invalid host');\n}",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "kept-as-reported",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "fix",
+          "confidence": "medium",
+          "rationale": "Severity left unchanged after review; no stronger Bitrix/BUS-specific downgrade condition was identified from the journal text alone."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      {
+        "file": "lib/agent.php",
+        "line": "338-339,355-356,397-398,431-432,562-563,589-590,616-617,642-643,664-665,684-685,730-731,769-770,816-817",
+        "type": "SSRF",
+        "severity": "medium",
+        "description": "Подозрение: Multiple SSRF via HttpClient with disabled SSL verification. В классе Agent множество мест (строки ~338, 355, 397, 431, 562, 589, 616, 642, 664, 684, 730, 769, 816) где создаётся HttpClient с disableSslVerification(). URL берется из $provider['MAIN_HOOK'] и $provider['HOOK'] которые хранятся в БД и могут быть изменены администратором модуля. Это позволяет perform SSRF к внутренним ресурсам с отключённой проверкой TLS.",
+        "recommendation": "Удалить disableSslVerification(). Добавить валидацию хоста URL. Использовать allowlist доменов Bitrix24.",
+        "fix": "Before:\n$client = new HttpClient();\n$client->disableSslVerification();\n\nAfter:\n$client = new HttpClient();\n// Удалить disableSslVerification()\n// Валидировать хост перед запросом",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "kept-as-reported",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "fix",
+          "confidence": "medium",
+          "rationale": "Severity left unchanged after review; no stronger Bitrix/BUS-specific downgrade condition was identified from the journal text alone."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      {
+        "file": "lib/api/controller/trace.php",
+        "line": "25-34",
+        "type": "CSRF",
+        "severity": "medium",
+        "description": "Подтверждён CSRF в контроллере Trace. Метод configureActions() на строке 25 возвращает prefilters только с Scope(AJAX) и Sign(filter), но БЕЗ ActionFilter\\Csrf(). State-changing операция saveAction() доступна без CSRF-токена. Авторизованный пользователь может быть принуждён к выполнению запроса к api/trace.php?action=save.",
+        "recommendation": "Добавить ActionFilter\\Csrf() в prefilters для action save.",
+        "fix": "Before:\nreturn array(\n    'save' => array(\n        'prefilters' => array(\n            new Scope(Scope::AJAX),\n            new Sign(array('time'))\n        )\n    )\n);\n\nAfter:\nreturn array(\n    'save' => array(\n        'prefilters' => array(\n            new Scope(Scope::AJAX),\n            new Sign(array('time')),\n            new \\Bitrix\\Main\\Engine\\ActionFilter\\Csrf()\n        )\n    )\n);",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "csrf-state-change",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "add-sessid-and-owner-checks",
+          "confidence": "medium",
+          "rationale": "Kept as medium because the finding describes state change without check_bitrix_sessid; raise only if cross-user deletion or higher-impact state change is confirmed."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      {
+        "file": "lib/adminpages/providersedit.php",
+        "line": "51",
+        "type": "Open Redirect",
+        "severity": "medium",
+        "description": "Подозрение: Open Redirect. LocalRedirect() на строке 51 перенаправляет на URL собранный из параметров: $this->getParam('LIST_URL').$this->getParam('MODIF').'lang='.LANG. LIST_URL и MODIF берутся из GET-параметров страницы админки. Хотя это админ-панель (требует авторизации), неавторизованный пользователь может попытаться фишинговую ссылку через URL с параметрами.",
+        "recommendation": "Валидировать URL перед редиректом - проверять что начинается с '/' и не '//'.",
+        "fix": "Before:\n\\LocalRedirect($this->getParam('LIST_URL').$this->getParam('MODIF').'lang='.LANG);\n\nAfter:\n$redirectUrl = $this->getParam('LIST_URL').$this->getParam('MODIF').'lang='.LANG;\n// Валидация локального URL\nif (strpos($redirectUrl, '//') !== 0 && strpos($redirectUrl, 'http') !== 0) {\n    \\LocalRedirect($redirectUrl);\n}",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "medium",
+          "changed": true,
+          "category": "public-open-redirect",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "allowlist-local-redirects",
+          "confidence": "medium",
+          "rationale": "Kept as medium because request-controlled backurl redirect can support phishing after login; restrict to relative/local URLs."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      },
+      {
+        "file": "options.php",
+        "line": "57",
+        "type": "Open Redirect",
+        "severity": "medium",
+        "description": "Подозрение: Open Redirect через LocalRedirect($saveUrl) на строке 57. $saveUrl формируется из htmlspecialcharsbx($module_id) что безопасно (экранировано). Однако если $APPLICATION->GetCurPage() вернёт URL с query-параметрами содержащими //, возможен protocol-relative redirect. Требует авторизации в админке.",
+        "recommendation": "Валидировать URL перед редиректом.",
+        "fix": "Before:\nLocalRedirect($saveUrl);\n\nAfter:\n// Валидация перед редиректом\nif (strpos($saveUrl, '//') !== 0) {\n    LocalRedirect($saveUrl);\n}",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "medium",
+          "changed": true,
+          "category": "public-open-redirect",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "allowlist-local-redirects",
+          "confidence": "medium",
+          "rationale": "Kept as medium because request-controlled backurl redirect can support phishing after login; restrict to relative/local URLs."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T06:55:51+00:00"
+        }
+      }
+    ],
+    "summary": "Обнаружено 8 уязвимостей в 6 файлах при анализе 68 файлов модуля. Максимальная severity: high.",
+    "scannedFiles": 68,
+    "riskLevel": "high",
+    "auditedFiles": [
+      "lib/helper.php",
+      "lib/agent.php",
+      "lib/providers.php",
+      "lib/api/filters/sign.php",
+      "lib/api/controller/trace.php",
+      "lib/access/model/usermodel.php",
+      "lib/adminpages/providersedit.php",
+      "lib/bx24catalog.php",
+      "options.php",
+      "install/components/bx24lead.config.permissions/ajax.php",
+      "admin/check_awz_admin.php"
+    ],
+    "reviewSummary": {
+      "reviewedAt": "2026-09-17",
+      "method": "BUS-aware triage: preserve original finding fields except severity, add reviewed node with old severity and rationale.",
+      "totals": {
+        "vulnerabilities": 8,
+        "changedSeverity": 2,
+        "unchangedSeverity": 6
+      },
+      "rawSeverityCounts": {
+        "high": 2,
+        "medium": 4,
+        "low": 2
+      },
+      "reviewedSeverityCounts": {
+        "high": 2,
+        "medium": 6
+      },
+      "currentScope": {
+        "total": 8,
+        "rawSeverityCounts": {
+          "high": 2,
+          "medium": 4,
+          "low": 2
+        },
+        "reviewedSeverityCounts": {
+          "high": 2,
+          "medium": 6
+        },
+        "reviewedCategories": {
+          "confirmed-backdoor": 2,
+          "kept-as-reported": 3,
+          "csrf-state-change": 1,
+          "public-open-redirect": 2
+        }
+      },
+      "historicalUpdatePackages": {
+        "total": 0,
+        "rawSeverityCounts": {},
+        "reviewedSeverityCounts": {},
+        "reviewedCategories": {}
+      },
+      "caveats": [
+        "Type, file, line, description, recommendation and fix are preserved from the source journal.",
+        "Severity is replaced with reviewed triage severity."
+      ]
+    },
+    "feedbackSummary": {
+      "updatedAt": "2026-09-17T06:55:51+00:00",
+      "applied": 8
+    }
+  }
+}
