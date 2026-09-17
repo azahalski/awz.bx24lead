@@ -317,7 +317,6 @@ class bx24Catalog {
 
         if(!$res){
             $httpClient = new HttpClient();
-            $httpClient->disableSslVerification();
             if($type == HttpClient::HTTP_GET){
                 if(!empty($data)) {
                     $url .= strpos($url, '?')!==false ? '&' : '?';

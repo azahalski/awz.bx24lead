@@ -28,7 +28,7 @@ if(!AccessController::isViewSettings())
 $APPLICATION->AuthForm(Loc::getMessage("ACCESS_DENIED"));
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php");
 
-if($request->get('addiblock') && AccessController::isEditSettings()){
+if($request->get('addiblock') && AccessController::isEditSettings() && check_bitrix_sessid()){
     $r = \Bitrix\Iblock\PropertyTable::add([
         'NAME'=>'AWZ_HANDLED',
         'CODE'=>'AWZ_HANDLED',
@@ -140,7 +140,7 @@ $tabControl->Begin();
                 <?if(isset($properties[$data['ID']])){?>
                     <b><?=Loc::getMessage('AWZ_BX24LEAD_OPT_IB_OK')?></b>
                 <?}else{?>
-                    <a href="<?=$saveUrl?>&addiblock=<?=$data['ID']?>">
+                    <a href="<?=htmlspecialcharsbx($saveUrl.'&addiblock='.(int)$data['ID'].'&'.bitrix_sessid_get())?>">
                         <?=Loc::getMessage('AWZ_BX24LEAD_OPT_ADD_IB')?>
                     </a>
                 <?}?>

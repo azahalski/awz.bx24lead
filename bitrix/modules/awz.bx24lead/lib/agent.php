@@ -306,11 +306,14 @@ class Agent {
             //echo'<pre>';print_r($prepareData);echo'</pre>';
             //die();
 
+            // PHP-шаблон разрешён ТОЛЬКО для констант, введённых оператором в настройках провайдера.
+            // Значения сущностей (заказ/инфоблок/веб-форма) кодом не являются и кодом не исполняются.
+            $constValues = (isset($provider['PRM']['values']) && is_array($provider['PRM']['values']))
+                ? $provider['PRM']['values'] : [];
             foreach($prepareData as $k=>&$v){
                 $tmpv = $v;
                 try{
-                    //print_r([$v, $valuesList]);
-                    if(is_string($v) && strpos($v,'<?')!==false){
+                    if(is_string($v) && strpos($v,'<?')!==false && in_array($v, $constValues, true)){
                         $v = Helper::executePhp($v, $valuesList, $provider);
                         $unserTest = unserialize($v, ['allowed_classes' => false]);
                         if($unserTest!==false){
@@ -336,11 +339,10 @@ class Agent {
                             if($prepareData['[CONTACT]PHONE']){
                                 $url = str_replace('/api/v4/leads','/api/v4/contacts',$urlData[1]);
                                 $client = new HttpClient();
-                                $client->disableSslVerification();
                                 $client->setTimeout(5);
                                 $client->setStreamTimeout(5);
                                 $client->setHeader('Authorization', 'Bearer '.$urlData[2]);
-                                $r = $client->get($url.'?query='.$prepareData['[CONTACT]PHONE']);
+                                $r = $client->get($url.'?'.http_build_query(['query'=>$prepareData['[CONTACT]PHONE']]));
 
                                 if($r){
                                     $r = Json::decode($r);
@@ -353,11 +355,10 @@ class Agent {
                             if($prepareData['[CONTACT]EMAIL']){
                                 $url = str_replace('/api/v4/leads','/api/v4/contacts',$urlData[1]);
                                 $client = new HttpClient();
-                                $client->disableSslVerification();
                                 $client->setTimeout(5);
                                 $client->setStreamTimeout(5);
                                 $client->setHeader('Authorization', 'Bearer '.$urlData[2]);
-                                $r = $client->get($url.'?query='.$prepareData['[CONTACT]EMAIL']);
+                                $r = $client->get($url.'?'.http_build_query(['query'=>$prepareData['[CONTACT]EMAIL']]));
 
                                 if($r){
                                     $r = Json::decode($r);
@@ -395,7 +396,6 @@ class Agent {
 
                     $url = str_replace('/api/v4/leads','/api/v4/contacts',$urlData[1]);
                     $client = new HttpClient();
-                    $client->disableSslVerification();
                     $client->setTimeout(5);
                     $client->setStreamTimeout(5);
                     $client->setHeader('Authorization', 'Bearer '.$urlData[2]);
@@ -429,7 +429,6 @@ class Agent {
                 }
                 $url = $urlData[1];
                 $client = new HttpClient();
-                $client->disableSslVerification();
                 $client->setTimeout(5);
                 $client->setStreamTimeout(5);
                 $client->setHeader('Authorization', 'Bearer '.$urlData[2]);
@@ -560,7 +559,6 @@ class Agent {
                                     ];
                                     $url = $provider['MAIN_HOOK'].'crm.contact.list';
                                     $client = new HttpClient();
-                                    $client->disableSslVerification();
                                     $client->setTimeout(5);
                                     $client->setStreamTimeout(5);
                                     $r = $client->post($url,$body);
@@ -587,7 +585,6 @@ class Agent {
                                     ];
                                     $url = $provider['MAIN_HOOK'].'crm.contact.list';
                                     $client = new HttpClient();
-                                    $client->disableSslVerification();
                                     $client->setTimeout(5);
                                     $client->setStreamTimeout(5);
                                     $r = $client->post($url,$body);
@@ -614,7 +611,6 @@ class Agent {
                                     ];
                                     $url = $provider['MAIN_HOOK'].'crm.contact.list';
                                     $client = new HttpClient();
-                                    $client->disableSslVerification();
                                     $client->setTimeout(5);
                                     $client->setStreamTimeout(5);
                                     $r = $client->post($url,$body);
@@ -640,7 +636,6 @@ class Agent {
                                     ];
                                     $url = $provider['MAIN_HOOK'].'crm.contact.list';
                                     $client = new HttpClient();
-                                    $client->disableSslVerification();
                                     $client->setTimeout(5);
                                     $client->setStreamTimeout(5);
                                     $r = $client->post($url,$body);
@@ -662,7 +657,6 @@ class Agent {
 
                     $url = $provider['MAIN_HOOK'].'crm.requisite.list';
                     $client = new HttpClient();
-                    $client->disableSslVerification();
                     $client->setTimeout(5);
                     $client->setStreamTimeout(5);
                     $body = [
@@ -682,7 +676,6 @@ class Agent {
                     if(!$COMPANY_ID){
                         $url = $provider['MAIN_HOOK'].'crm.company.list';
                         $client = new HttpClient();
-                        $client->disableSslVerification();
                         $client->setTimeout(5);
                         $client->setStreamTimeout(5);
                         $body = [
@@ -728,7 +721,6 @@ class Agent {
                         $provider['HOOK']
                     );
                     $client = new HttpClient();
-                    $client->disableSslVerification();
                     $client->setTimeout(5);
                     $client->setStreamTimeout(5);
                     $r = $client->post($url,$bodyf);
@@ -767,7 +759,6 @@ class Agent {
                         $provider['HOOK']
                     );
                     $client = new HttpClient();
-                    $client->disableSslVerification();
                     $client->setTimeout(5);
                     $client->setStreamTimeout(5);
                     $r = $client->post($url,$bodyf);
@@ -814,7 +805,6 @@ class Agent {
                 ];
                 $url = $provider['HOOK'];
                 $client = new HttpClient();
-                $client->disableSslVerification();
                 $client->setTimeout(5);
                 $client->setStreamTimeout(5);
                 $r = $client->post($url,$bodyf);

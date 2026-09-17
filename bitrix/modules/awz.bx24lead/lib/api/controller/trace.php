@@ -28,18 +28,27 @@ class Trace extends Controller
             'save' => array(
                 'prefilters' => array(
                     new Scope(Scope::AJAX),
-                    new Sign(array('time'))
+                    new Sign(array('time','s_id'))
                 )
             )
         );
     }
 
-    public function saveAction(int $time=0){
+    public function saveAction(int $time=0, string $s_id = ''){
 
         if($time<time()){
             $this->addError(
                 new Error(
                     "timeout expired",
+                    100
+                )
+            );
+            return null;
+        }
+        if($s_id!=\bitrix_sessid()){
+            $this->addError(
+                new Error(
+                    "Ошибка проверки Csrf",
                     100
                 )
             );

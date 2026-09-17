@@ -69,7 +69,6 @@ class Helper {
         }elseif( $obCache->startDataCache()){
             if(substr($url,-12) === 'crm.lead.add'){
                 $httpClient = new HttpClient();
-                $httpClient->disableSslVerification();
                 $httpClient->setTimeout(5);
                 $httpClient->setStreamTimeout(5);
                 $res = $httpClient->get(substr($url,0,-3).'fields');
@@ -132,7 +131,6 @@ class Helper {
             }
             elseif(substr($url,-12) === 'crm.deal.add'){
                 $httpClient = new HttpClient();
-                $httpClient->disableSslVerification();
                 $httpClient->setTimeout(5);
                 $httpClient->setStreamTimeout(5);
                 $res = $httpClient->get(substr($url,0,-3).'fields');
@@ -177,7 +175,6 @@ class Helper {
                 }
             }elseif(strpos($url,'crm.item.add?entityTypeId=')!==false){
                 $httpClient = new HttpClient();
-                $httpClient->disableSslVerification();
                 $httpClient->setTimeout(5);
                 $httpClient->setStreamTimeout(5);
                 $res = $httpClient->get(str_replace('.add?','.fields?',$url));
@@ -217,7 +214,6 @@ class Helper {
             }
             elseif($urlData[0]=='amo'){
                 $httpClient = new HttpClient();
-                $httpClient->disableSslVerification();
                 $httpClient->setTimeout(5);
                 $httpClient->setStreamTimeout(5);
                 $httpClient->setHeader('Authorization', 'Bearer '.$urlData[2]);

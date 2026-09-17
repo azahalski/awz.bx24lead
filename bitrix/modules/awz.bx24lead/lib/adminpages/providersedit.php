@@ -101,7 +101,7 @@ class ProvidersEdit extends IForm implements IParams {
                 <?}else{?>
                     #<?=$code?># -
                 <?}?>
-                <?=$fieldName?>
+                <?=htmlspecialcharsEx($fieldName)?>
             </td>
             <td style="border-bottom:1px dashed #000000;">
                 <?
@@ -166,7 +166,7 @@ class ProvidersEdit extends IForm implements IParams {
                         <select name="<?=$arField['NAME']?>[options][rsevent]">
                             <option value="">-</option>
                             <?foreach($valuesOpt as $v=>$title){?>
-                                <option value="<?=$v?>"<?=(isset($values['options']['rsevent']) && ($v == $values['options']['rsevent'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
+                                <option value="<?=htmlspecialcharsEx($v)?>"<?=(isset($values['options']['rsevent']) && ($v == $values['options']['rsevent'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
                             <?}?>
                         </select>
                     </td>
@@ -188,7 +188,7 @@ class ProvidersEdit extends IForm implements IParams {
                         <select name="<?=$arField['NAME']?>[options][addcompany]" style="float:left;">
                             <option value="">-</option>
                             <?foreach($valuesOpt as $v=>$title){?>
-                                <option value="<?=$v?>"<?=(isset($values['options']['addcompany']) && ($v == $values['options']['addcompany'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
+                                <option value="<?=htmlspecialcharsEx($v)?>"<?=(isset($values['options']['addcompany']) && ($v == $values['options']['addcompany'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
                             <?}?>
                         </select>
 
@@ -202,7 +202,7 @@ class ProvidersEdit extends IForm implements IParams {
                                 if($v === 'NALOG_ID') continue;
                                 $title = '['.$v.'] - '.$field['title'];
                                 ?>
-                                <option value="<?=$v?>"<?=(isset($values['options']['nalogid']) && ($v == $values['options']['nalogid'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
+                                <option value="<?=htmlspecialcharsEx($v)?>"<?=(isset($values['options']['nalogid']) && ($v == $values['options']['nalogid'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
                             <?}?>
                         </select>
                     </td>
@@ -221,7 +221,7 @@ class ProvidersEdit extends IForm implements IParams {
                         <select name="<?=$arField['NAME']?>[options][addcontact]">
                             <option value="">-</option>
                             <?foreach($valuesOpt as $v=>$title){?>
-                                <option value="<?=$v?>"<?=(isset($values['options']['addcontact']) && ($v == $values['options']['addcontact'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
+                                <option value="<?=htmlspecialcharsEx($v)?>"<?=(isset($values['options']['addcontact']) && ($v == $values['options']['addcontact'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
                             <?}?>
                         </select>
                     </td>
@@ -237,7 +237,7 @@ class ProvidersEdit extends IForm implements IParams {
                         <select name="<?=$arField['NAME']?>[options][contact]">
                             <option value="">Укажите как искать контакт</option>
                             <?foreach($valuesOpt as $v=>$title){?>
-                                <option value="<?=$v?>"<?=(isset($values['options']['contact']) && ($v == $values['options']['contact'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
+                                <option value="<?=htmlspecialcharsEx($v)?>"<?=(isset($values['options']['contact']) && ($v == $values['options']['contact'])) ? "selected=\"selected\"" : ""?>><?=$title?></option>
                             <?}?>
                         </select>
                     </td>
