@@ -290,7 +290,7 @@ class Agent {
                 if(!$prepareData[$bx24Code]) {
                     $prepareData[$bx24Code] = $valuesList[$code];
                 }
-                if(is_string($prepareData[$bx24Code]) && strpos($prepareData[$bx24Code], '#')!==false){
+                if(is_string($prepareData[$bx24Code]) && strpos($prepareData[$bx24Code], '#')!==false && strpos($v,'<?')===false){
                     $prepareData[$bx24Code] = str_replace(array_keys($macrosList), array_values($macrosList), $prepareData[$bx24Code]);
                 }
                 if($fieldsHook[$bx24Code]['type'] == 'file'){

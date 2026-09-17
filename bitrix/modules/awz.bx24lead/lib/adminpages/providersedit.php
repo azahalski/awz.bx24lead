@@ -110,13 +110,13 @@ class ProvidersEdit extends IForm implements IParams {
                     $rowCnt = ceil(strlen(htmlspecialcharsEx($values['values'][$code]))/60);
                 }
                 ?>
-                <textarea rows="<?=$rowCnt?>" cols="60" name="<?=$arField['NAME']?>[values][<?=$code?>]"><?=htmlspecialcharsEx($values['values'][$code])?></textarea>
+                <textarea rows="<?=$rowCnt?>" cols="60" name="<?=htmlspecialcharsEx($arField['NAME'])?>[values][<?=htmlspecialcharsEx($code)?>]"><?=htmlspecialcharsEx($values['values'][$code])?></textarea>
             </td>
             <td style="border-bottom:1px dashed #000000;">
-                <select name="<?=$arField['NAME']?>[<?=$code?>]">
+                <select name="<?=htmlspecialcharsEx($arField['NAME'])?>[<?=htmlspecialcharsEx($code)?>]">
                     <option value="">-</option>
                     <?foreach($fieldsHook as $field){?>
-                        <option value="<?=$field['CODE']?>"<?=(isset($values[$code]) && ($field['CODE'] === $values[$code])) ? "selected=\"selected\"" : ""?>><?=$field['CODE']?><?if($field['isMultiple']){?>[]<?}?> - <?=$field['type']?> - <?=$field['title']?></option>
+                        <option value="<?=htmlspecialcharsEx($field['CODE'])?>"<?=(isset($values[$code]) && ($field['CODE'] === $values[$code])) ? "selected=\"selected\"" : ""?>><?=htmlspecialcharsEx($field['CODE'])?><?if($field['isMultiple']){?>[]<?}?> - <?=htmlspecialcharsEx($field['type'])?> - <?=htmlspecialcharsEx($field['title'])?></option>
                     <?}?>
                 </select>
             </td>

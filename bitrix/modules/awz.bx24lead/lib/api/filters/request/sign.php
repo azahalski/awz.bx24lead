@@ -36,6 +36,8 @@ class Sign implements Type\IRequestFilter
             foreach($keys as $key){
                 if(isset($valuesData[$key])){
                     $values['get'][$key] = $valuesData[$key];
+                }else{
+                    $values['get'][$key] = '';
                 }
             }
 

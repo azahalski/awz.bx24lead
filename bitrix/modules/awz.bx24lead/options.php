@@ -37,7 +37,7 @@ if($request->get('addiblock') && AccessController::isEditSettings()){
     ]);
 }
 
-if ($request->getRequestMethod()==='POST' && AccessController::isEditSettings() && $request->get('Update'))
+if ($request->getRequestMethod()==='POST' && AccessController::isEditSettings() && $request->get('Update') && check_bitrix_sessid())
 {
     Option::set($module_id, "NOBJ", $request->get("NOBJ")=='Y' ? 'Y' : 'N', "");
     Option::set($module_id, "MAXRETR", preg_replace("/([^0-9])/","",$request->get("MAXRETR")), "");
@@ -61,6 +61,7 @@ $tabControl->Begin();
 ?>
 <style>.adm-workarea option:checked {background-color: rgb(206, 206, 206);}</style>
 <form method="POST" action="<?=$saveUrl?>" id="FORMACTION">
+    <?=bitrix_sessid_post()?>
     <?
     $tabControl->BeginNextTab();
     \Bitrix\Main\UI\Extension::load("ui.alerts");
@@ -134,7 +135,7 @@ $tabControl->Begin();
                 if(isset($properties[$data['ID']])) continue;
                 ?>
         <tr>
-            <td>[<?=$data['ID']?>] [<?=$data['IBLOCK_TYPE_ID']?>] <?=$data['NAME']?></td>
+            <td>[<?=$data['ID']?>] [<?=htmlspecialcharsEx($data['IBLOCK_TYPE_ID'])?>] <?=htmlspecialcharsEx($data['NAME'])?></td>
             <td>
                 <?if(isset($properties[$data['ID']])){?>
                     <b><?=Loc::getMessage('AWZ_BX24LEAD_OPT_IB_OK')?></b>
