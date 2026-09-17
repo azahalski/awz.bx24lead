@@ -25,9 +25,9 @@
         },
         "partner_disposition": {
           "status": "accepted_risk",
-          "note": "",
+          "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       {
@@ -54,7 +54,7 @@
           "status": "false_positive",
           "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       {
@@ -81,7 +81,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       {
@@ -108,7 +108,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       {
@@ -135,7 +135,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       {
@@ -162,7 +162,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       {
@@ -189,7 +189,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       {
@@ -216,7 +216,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       }
     ],
@@ -283,7 +283,7 @@
       ]
     },
     "feedbackSummary": {
-      "updatedAt": "2026-09-17T06:55:51+00:00",
+      "updatedAt": "2026-09-17T09:25:28+00:00",
       "applied": 8
     }
   }

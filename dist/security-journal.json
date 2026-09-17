@@ -388,9 +388,9 @@
         },
         "partner_disposition": {
           "status": "accepted_risk",
-          "note": "",
+          "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       "events": [
@@ -410,6 +410,14 @@
           "at": "2026-09-17T06:55:51+00:00",
           "status": "accepted_risk",
           "note": "",
+          "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:25:28+00:00",
+          "status": "accepted_risk",
+          "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
           "author": "Andrew Zahalski"
         }
       ]
@@ -455,7 +463,7 @@
           "status": "false_positive",
           "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       "events": [
@@ -473,6 +481,14 @@
           "run_id": "awz.bx24lead-1789637821",
           "event": "partner_disposition_updated",
           "at": "2026-09-17T06:55:51+00:00",
+          "status": "false_positive",
+          "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
+          "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:25:28+00:00",
           "status": "false_positive",
           "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
           "author": "Andrew Zahalski"
@@ -520,7 +536,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       "events": [
@@ -538,6 +554,14 @@
           "run_id": "awz.bx24lead-1789637821",
           "event": "partner_disposition_updated",
           "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:25:28+00:00",
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
@@ -585,7 +609,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       "events": [
@@ -603,6 +627,14 @@
           "run_id": "awz.bx24lead-1789637821",
           "event": "partner_disposition_updated",
           "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:25:28+00:00",
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
@@ -650,7 +682,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       "events": [
@@ -668,6 +700,14 @@
           "run_id": "awz.bx24lead-1789637821",
           "event": "partner_disposition_updated",
           "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:25:28+00:00",
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
@@ -715,7 +755,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       "events": [
@@ -733,6 +773,14 @@
           "run_id": "awz.bx24lead-1789637821",
           "event": "partner_disposition_updated",
           "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:25:28+00:00",
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
@@ -780,7 +828,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       "events": [
@@ -798,6 +846,14 @@
           "run_id": "awz.bx24lead-1789637821",
           "event": "partner_disposition_updated",
           "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:25:28+00:00",
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
@@ -845,7 +901,7 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski",
-          "updated_at": "2026-09-17T06:55:51+00:00"
+          "updated_at": "2026-09-17T09:25:28+00:00"
         }
       },
       "events": [
@@ -863,6 +919,14 @@
           "run_id": "awz.bx24lead-1789637821",
           "event": "partner_disposition_updated",
           "at": "2026-09-17T06:55:51+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1789637821",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:25:28+00:00",
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
