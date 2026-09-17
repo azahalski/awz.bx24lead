@@ -274,27 +274,36 @@ class Agent {
         if(!empty($valuesList)) {
 
             $prepareData = [];
+            $fromOper = [];
             foreach($provider['PRM'] as $code=>$bx24Code){
                 if($code === 'values') continue;
                 if($code === 'options') continue;
                 if(substr($code, 0,5)==='const'){
-                    if(isset($provider['PRM']['values'][$code]) && $provider['PRM']['values'][$code])
+                    if(isset($provider['PRM']['values'][$code]) && $provider['PRM']['values'][$code]){
                         $prepareData[$bx24Code] = $provider['PRM']['values'][$code];
+                        $fromOper[$bx24Code] = true;
+                    }
                 }elseif(substr($code, 0,9)==='PROPERTY_'){
-                    if(isset($provider['PRM']['values'][$code]) && $provider['PRM']['values'][$code])
+                    if(isset($provider['PRM']['values'][$code]) && $provider['PRM']['values'][$code]){
                         $prepareData[$bx24Code] = $provider['PRM']['values'][$code];
+                        $fromOper[$bx24Code] = true;
+                    }
                 }else{
-                    if(isset($provider['PRM']['values'][$code]) && $provider['PRM']['values'][$code])
+                    if(isset($provider['PRM']['values'][$code]) && $provider['PRM']['values'][$code]){
                         $prepareData[$bx24Code] = $provider['PRM']['values'][$code];
+                        $fromOper[$bx24Code] = true;
+                    }
                 }
                 if(!$prepareData[$bx24Code]) {
                     $valuesList[$code] = $valuesList[$code] ?? '';
-                    if(strpos($v,'<?')===false){
+                    if(strpos($valuesList[$code],'<?')===false){
                         $prepareData[$bx24Code] = $valuesList[$code];
+                        $fromOper[$bx24Code] = false;
                     }
                 }
                 if(is_string($prepareData[$bx24Code]) && strpos($prepareData[$bx24Code], '#')!==false && strpos($prepareData[$bx24Code],'<?')===false){
                     $prepareData[$bx24Code] = str_replace(array_keys($macrosList), array_values($macrosList), $prepareData[$bx24Code]);
+                    $fromOper[$bx24Code] = false;
                 }
                 if($fieldsHook[$bx24Code]['type'] == 'file'){
                     if(!$fieldsHook[$bx24Code]['isMultiple'] && !empty($prepareData[$bx24Code])){
@@ -313,7 +322,7 @@ class Agent {
             foreach($prepareData as $k=>&$v){
                 $tmpv = $v;
                 try{
-                    if(is_string($v) && strpos($v,'<?')!==false && in_array($v, $constValues, true)){
+                    if(is_string($v) && strpos($v,'<?')!==false && ($fromOper[$k] ?? false)){
                         $v = Helper::executePhp($v, $valuesList, $provider);
                         $unserTest = unserialize($v, ['allowed_classes' => false]);
                         if($unserTest!==false){

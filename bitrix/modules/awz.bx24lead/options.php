@@ -97,7 +97,7 @@ $tabControl->Begin();
     foreach($providers as $providerId=>$provider){?>
         <tr>
             <td colspan="2" style="text-align: center;padding:5px;">
-                <?=$provider?>
+                <?=htmlspecialcharsEx($provider)?>
             </td>
         </tr>
     <?}?>

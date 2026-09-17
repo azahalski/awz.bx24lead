@@ -45,7 +45,7 @@ class Trace extends Controller
             );
             return null;
         }
-        if($s_id!=\bitrix_sessid()){
+        if(!is_string($s_id) || !hash_equals((string)\bitrix_sessid(), $s_id)){
             $this->addError(
                 new Error(
                     "Ошибка проверки Csrf",
