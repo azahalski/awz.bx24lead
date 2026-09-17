@@ -1,0 +1,85 @@
+{
+  "success": true,
+  "requestId": "awz.bx24lead-1726550059",
+  "data": {
+    "vulnerabilities": [
+      {
+        "file": "lib/helper.php",
+        "line": "452",
+        "type": "RCE",
+        "severity": "high",
+        "description": "Подтверждена RCE через eval(). Функция Helper::executePhp() принимает неконтролируемую переменную $code и выполняет её через eval(). Этот метод вызывается в Agent::sendForm() (lib/agent.php:326) из полей формы провайдера, которые могут быть управляемы администратором модуля. Код PHP-фрагмента выполняется в контексте модуля с полным доступом к API Bitrix.",
+        "recommendation": "Заменить eval() на безопасный парсинг шаблонов. Использовать Bitrix MainMailEventMessageThemeCompiler через безопасный интерфейс без exec-вызовов. Если PHP-код необходим - использовать зарегистрированные хукиevents вместо произвольного выполнения.",
+        "fix": "Before:\n$result = eval(code);\n\nAfter:\n$compiled = EventMessageThemeCompiler::compile($code);\nob_start();\necho $compiled;\n$result = ob_get_clean();"
+      },
+      {
+        "file": "lib/agent.php",
+        "line": "350-816",
+        "type": "SSRF",
+        "severity": "medium",
+        "description": "Подозрение: SSRF (blind). В классе Agent используется HttpClient для отправки запросов к внешним CRM-системам (bitrix24, amoCRM). URL формируется из данных провайдеров ($provider['MAIN_HOOK']) и содержит Bearer-токены. Атакующий с доступом к конфигурации провайдеров может направить запросы на внутренние ресурсы. Запросы являются blind (ответ не возвращается), что ограничивает воздействие до egress-only.",
+        "recommendation": "Валидировать URL провайдеров на whitelist разрешённых доменов. Не хранить токены в открытом виде. Добавить проверку, что домен входит в разрешённый список.",
+        "fix": "Before:\n$client = new HttpClient();\n$client->setHeader('Authorization', 'Bearer '.$urlData[2]);\n$r = $client->get($url);\n\nAfter:\n$parseUrl = parse_url($url);\nif(!in_array($parseUrl['host'], $this->allowedDomains)){\n    throw new Error('Domain not allowed');\n}\n$client = new HttpClient();\n$client->setHeader('Authorization', 'Bearer '.$urlData[2]);\n$r = $client->get($url);"
+      },
+      {
+        "file": "lib/helper.php",
+        "line": "71-219",
+        "type": "SSRF",
+        "severity": "medium",
+        "description": "Подозрение: SSRF (blind). Метод Helper::getExtFieldParams() отправляет HTTP-запросы к CRM-API (bitrix24, amoCRM) на основе URL из конфигурации провайдеров. URL формируется из данных провайдеров и содержит токены авторизации. Ответ не используется для обратного туннелирования, но запросы могут быть направлены на внутренние ресурсы.",
+        "recommendation": "Валидировать домены в URL провайдеров. Добавить whitelist разрешённых доменов CRM-систем.",
+        "fix": "Before:\n$httpClient = new HttpClient();\n$res = $httpClient->get($url);\n\nAfter:\n$parseUrl = parse_url($url);\nif(!in_array($parseUrl['host'], ['api.bitrix24.com', 'api.amocrm.com'])){\n    throw new Error('Domain not allowed');\n}\n$httpClient = new HttpClient();\n$res = $httpClient->get($url);"
+      },
+      {
+        "file": "lib/bx24trace.php",
+        "line": "14-15",
+        "type": "Cross-Site Scripting",
+        "severity": "medium",
+        "description": "Подтверждён Stored XSS. bx24Trace::OnProlog() сохраняет значение $_REQUEST['TRACE'] напрямую в сессию без экранирования. Затем значение читается через session->get('BX24_TRACE') и может быть выведено на любой странице модуля без экранирования. Если TRACE содержит JavaScript-код, он будет выполнен при следующей загрузке страницы.",
+        "recommendation": "Экранировать вывод значения TRACE через htmlspecialcharsbx() или Json::encode() при сохранении в сессию или при выводе.",
+        "fix": "Before:\nif($request->get('TRACE'))\n    $session->set('BX24_TRACE', $request->get('TRACE'));\n\nAfter:\nif($request->get('TRACE'))\n    $session->set('BX24_TRACE', htmlspecialcharsbx($request->get('TRACE')));"
+      },
+      {
+        "file": "lib/api/filters/sign.php",
+        "line": "30-31",
+        "type": "Insecure Deserialization",
+        "severity": "low",
+        "description": "Подозрение: unserialize с защитой. Метод Sign::onBeforeAction() выполняет base64_decode() + unserialize() с опцией ['allowed_classes' => false]. Хотя классы отключены, сериализованные данные могут быть использованы для DoS через массивы с большим количеством элементов. Защита через allowed_classes снижает риск, но не устраняет полностью.",
+        "recommendation": "Добавить проверку подписи через SecuritySignSigner перед десериализацией. Убедиться, что данные действительно подписаны секретным ключом.",
+        "fix": "Before:\n$params = $signer->unsign($signed);\n$params = unserialize(base64_decode($params), ['allowed_classes' => false]);\n\nAfter:\n$originalSig = substr($signed, strlen($signed)-64);\n$data = substr($signed, 0, strlen($signed)-64);\nif(!$signer->verify($data, $originalSig, $keys)){\n    throw new SecurityViolation('Invalid sign');\n}\n$params = unserialize(base64_decode($data), ['allowed_classes' => false]);"
+      },
+      {
+        "file": "lib/adminpages/providersedit.php",
+        "line": "51",
+        "type": "Open Redirect",
+        "severity": "low",
+        "description": "Подозрение: Open Redirect. Метод checkDelete() использует LocalRedirect() с URL, содержащим параметры из $this->getParam(). Параметр MODIF добавляется непосредственно к URL редиректа без валидации. При наличии полного пути в MODIF возможен редирект на внешний домен.",
+        "recommendation": "Валидировать URL перед редиректом. Проверять, что URL начинается только с '/'. Не позволять добавлять произвольные параметры к URL.",
+        "fix": "Before:\nLocalRedirect with unvalidated MODIF param\n\nAfter:\n$url = $this->getParam('LIST_URL');\nif(strpos($url,'//')===0 || strpos($url,'http')===0) {\n    throw new Error('Invalid redirect URL');\n}\nLocalRedirect($url.'?lang='.LANG);"
+      },
+      {
+        "file": "options.php",
+        "line": "57",
+        "type": "Open Redirect",
+        "severity": "low",
+        "description": "Подозрение: Open Redirect. Файл options.php использует LocalRedirect($saveUrl) после обработки addiblock. Переменная $saveUrl формируется из $APPLICATION->GetCurPage(false) с параметрами. Если атакующий может контролировать referer или параметры URL, возможен редирект.",
+        "recommendation": "Валидировать URL перед редиректом. Использовать только относительные URL, начинающиеся с '/'.",
+        "fix": "Before:\nLocalRedirect($saveUrl);\n\nAfter:\nif(strpos($saveUrl,'//')!==0 && strpos($saveUrl,'http')!==0){\n    LocalRedirect($saveUrl);\n} else {\n    LocalRedirect('/bitrix/admin/options.php?mid='.$module_id);\n}"
+      }
+    ],
+    "summary": "Обнаружено 7 уязвимостей в 6 файлах при анализе 68 файлов модуля. Максимальная severity: high.",
+    "scannedFiles": 68,
+    "riskLevel": "high",
+    "auditedFiles": [
+      "lib/helper.php",
+      "lib/agent.php",
+      "lib/providers.php",
+      "lib/api/filters/sign.php",
+      "lib/api/controller/trace.php",
+      "lib/bx24trace.php",
+      "lib/adminpages/providersedit.php",
+      "options.php",
+      "install/components/bx24lead.config.permissions/ajax.php"
+    ]
+  }
+}

@@ -5,15 +5,15 @@
   },
   "current_state": {
     "status": "needs_review",
-    "last_run_id": "awz.bx24lead-1789637821",
+    "last_run_id": "awz.bx24lead-1726550059",
     "archive_sha256": null,
     "open_findings": 0,
     "blocking_findings_open": 0,
     "false_positive_findings": 1,
-    "accepted_risk_findings": 7,
-    "fixed_findings": 5,
+    "accepted_risk_findings": 6,
+    "fixed_findings": 13,
     "removed_findings": 0,
-    "total_findings": 13
+    "total_findings": 20
   },
   "runs": [
     {
@@ -50,6 +50,25 @@
         "still_open_findings": 0,
         "reopened_findings": 0,
         "resolved_since_previous_run": 5
+      }
+    },
+    {
+      "run_id": "awz.bx24lead-1726550059",
+      "created_at": "2026-09-17T09:57:50+00:00",
+      "archive_sha256": null,
+      "scanner_request_id": "awz.bx24lead-1726550059",
+      "input_summary": "Обнаружено 7 уязвимостей в 6 файлах при анализе 68 файлов модуля. Максимальная severity: high.",
+      "summary": {
+        "current_scan_findings": 7,
+        "severity_counts": {
+          "high": 1,
+          "medium": 4,
+          "low": 2
+        },
+        "new_findings": 7,
+        "still_open_findings": 0,
+        "reopened_findings": 0,
+        "resolved_since_previous_run": 8
       }
     }
   ],
@@ -354,18 +373,15 @@
       "fingerprint": "0dadbc23fc82852633cd50d37320bfbb",
       "type": "RCE",
       "severity": "high",
-      "status": "accepted_risk",
+      "status": "fixed",
       "first_seen_run_id": "awz.bx24lead-1789637821",
       "last_seen_run_id": "awz.bx24lead-1789637821",
-      "resolved_run_id": null,
+      "resolved_run_id": "awz.bx24lead-1726550059",
       "original_location": {
         "file": "lib/helper.php",
         "line": "456"
       },
-      "current_location": {
-        "file": "lib/helper.php",
-        "line": "456"
-      },
+      "current_location": null,
       "latest_vulnerability": {
         "file": "lib/helper.php",
         "line": "456",
@@ -419,26 +435,34 @@
           "status": "accepted_risk",
           "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
           "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "resolved",
+          "at": "2026-09-17T09:57:50+00:00",
+          "status": "fixed"
         }
-      ]
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1726550059",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
     },
     {
       "journal_finding_id": "JF-00007",
       "fingerprint": "44f3cda2dd973c596678e8a1efb74cf7",
       "type": "RCE",
       "severity": "high",
-      "status": "false_positive",
+      "status": "fixed",
       "first_seen_run_id": "awz.bx24lead-1789637821",
       "last_seen_run_id": "awz.bx24lead-1789637821",
-      "resolved_run_id": null,
+      "resolved_run_id": "awz.bx24lead-1726550059",
       "original_location": {
         "file": "lib/agent.php",
         "line": "314"
       },
-      "current_location": {
-        "file": "lib/agent.php",
-        "line": "314"
-      },
+      "current_location": null,
       "latest_vulnerability": {
         "file": "lib/agent.php",
         "line": "314",
@@ -492,26 +516,34 @@
           "status": "false_positive",
           "note": "настройки полей вносит администратор, пользовательские данные не подставляются в шаблон если содержат теги php",
           "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "resolved",
+          "at": "2026-09-17T09:57:50+00:00",
+          "status": "fixed"
         }
-      ]
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1726550059",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
     },
     {
       "journal_finding_id": "JF-00008",
       "fingerprint": "ca1305c320764109c208c7515abc8551",
       "type": "Insecure Deserialization",
       "severity": "medium",
-      "status": "accepted_risk",
+      "status": "fixed",
       "first_seen_run_id": "awz.bx24lead-1789637821",
       "last_seen_run_id": "awz.bx24lead-1789637821",
-      "resolved_run_id": null,
+      "resolved_run_id": "awz.bx24lead-1726550059",
       "original_location": {
         "file": "lib/api/filters/sign.php",
         "line": "30-31"
       },
-      "current_location": {
-        "file": "lib/api/filters/sign.php",
-        "line": "30-31"
-      },
+      "current_location": null,
       "latest_vulnerability": {
         "file": "lib/api/filters/sign.php",
         "line": "30-31",
@@ -565,26 +597,34 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "resolved",
+          "at": "2026-09-17T09:57:50+00:00",
+          "status": "fixed"
         }
-      ]
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1726550059",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
     },
     {
       "journal_finding_id": "JF-00009",
       "fingerprint": "4c90757ae4c4bc193135e33912dab014",
       "type": "SSRF",
       "severity": "medium",
-      "status": "accepted_risk",
+      "status": "fixed",
       "first_seen_run_id": "awz.bx24lead-1789637821",
       "last_seen_run_id": "awz.bx24lead-1789637821",
-      "resolved_run_id": null,
+      "resolved_run_id": "awz.bx24lead-1726550059",
       "original_location": {
         "file": "lib/bx24catalog.php",
         "line": "319-320"
       },
-      "current_location": {
-        "file": "lib/bx24catalog.php",
-        "line": "319-320"
-      },
+      "current_location": null,
       "latest_vulnerability": {
         "file": "lib/bx24catalog.php",
         "line": "319-320",
@@ -638,26 +678,34 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "resolved",
+          "at": "2026-09-17T09:57:50+00:00",
+          "status": "fixed"
         }
-      ]
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1726550059",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
     },
     {
       "journal_finding_id": "JF-00010",
       "fingerprint": "dd48641b815c4dce56b638e01387d1da",
       "type": "SSRF",
       "severity": "medium",
-      "status": "accepted_risk",
+      "status": "fixed",
       "first_seen_run_id": "awz.bx24lead-1789637821",
       "last_seen_run_id": "awz.bx24lead-1789637821",
-      "resolved_run_id": null,
+      "resolved_run_id": "awz.bx24lead-1726550059",
       "original_location": {
         "file": "lib/agent.php",
         "line": "338-339,355-356,397-398,431-432,562-563,589-590,616-617,642-643,664-665,684-685,730-731,769-770,816-817"
       },
-      "current_location": {
-        "file": "lib/agent.php",
-        "line": "338-339,355-356,397-398,431-432,562-563,589-590,616-617,642-643,664-665,684-685,730-731,769-770,816-817"
-      },
+      "current_location": null,
       "latest_vulnerability": {
         "file": "lib/agent.php",
         "line": "338-339,355-356,397-398,431-432,562-563,589-590,616-617,642-643,664-665,684-685,730-731,769-770,816-817",
@@ -711,26 +759,34 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "resolved",
+          "at": "2026-09-17T09:57:50+00:00",
+          "status": "fixed"
         }
-      ]
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1726550059",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
     },
     {
       "journal_finding_id": "JF-00011",
       "fingerprint": "e3c00560fdbf5478917d5f537f2c5947",
       "type": "CSRF",
       "severity": "medium",
-      "status": "accepted_risk",
+      "status": "fixed",
       "first_seen_run_id": "awz.bx24lead-1789637821",
       "last_seen_run_id": "awz.bx24lead-1789637821",
-      "resolved_run_id": null,
+      "resolved_run_id": "awz.bx24lead-1726550059",
       "original_location": {
         "file": "lib/api/controller/trace.php",
         "line": "25-34"
       },
-      "current_location": {
-        "file": "lib/api/controller/trace.php",
-        "line": "25-34"
-      },
+      "current_location": null,
       "latest_vulnerability": {
         "file": "lib/api/controller/trace.php",
         "line": "25-34",
@@ -784,26 +840,34 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "resolved",
+          "at": "2026-09-17T09:57:50+00:00",
+          "status": "fixed"
         }
-      ]
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1726550059",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
     },
     {
       "journal_finding_id": "JF-00012",
       "fingerprint": "3910d9f49275059cba8de7f0d44e267b",
       "type": "Open Redirect",
       "severity": "medium",
-      "status": "accepted_risk",
+      "status": "fixed",
       "first_seen_run_id": "awz.bx24lead-1789637821",
       "last_seen_run_id": "awz.bx24lead-1789637821",
-      "resolved_run_id": null,
+      "resolved_run_id": "awz.bx24lead-1726550059",
       "original_location": {
         "file": "lib/adminpages/providersedit.php",
         "line": "51"
       },
-      "current_location": {
-        "file": "lib/adminpages/providersedit.php",
-        "line": "51"
-      },
+      "current_location": null,
       "latest_vulnerability": {
         "file": "lib/adminpages/providersedit.php",
         "line": "51",
@@ -857,26 +921,34 @@
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "resolved",
+          "at": "2026-09-17T09:57:50+00:00",
+          "status": "fixed"
         }
-      ]
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1726550059",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
     },
     {
       "journal_finding_id": "JF-00013",
       "fingerprint": "0f14ce37122a3f52c43fbcf8cf9e9b1f",
       "type": "Open Redirect",
       "severity": "medium",
-      "status": "accepted_risk",
+      "status": "fixed",
       "first_seen_run_id": "awz.bx24lead-1789637821",
       "last_seen_run_id": "awz.bx24lead-1789637821",
-      "resolved_run_id": null,
+      "resolved_run_id": "awz.bx24lead-1726550059",
       "original_location": {
         "file": "options.php",
         "line": "57"
       },
-      "current_location": {
-        "file": "options.php",
-        "line": "57"
-      },
+      "current_location": null,
       "latest_vulnerability": {
         "file": "options.php",
         "line": "57",
@@ -927,6 +999,472 @@
           "run_id": "awz.bx24lead-1789637821",
           "event": "partner_disposition_updated",
           "at": "2026-09-17T09:25:28+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "resolved",
+          "at": "2026-09-17T09:57:50+00:00",
+          "status": "fixed"
+        }
+      ],
+      "resolution": {
+        "type": "not_reproduced_after_rescan",
+        "resolved_in_run": "awz.bx24lead-1726550059",
+        "reason": "The reviewed scan no longer reports a matching finding for the current archive."
+      }
+    },
+    {
+      "journal_finding_id": "JF-00014",
+      "fingerprint": "2689a369cd7c9a16e7b8b70ebb521104",
+      "type": "RCE",
+      "severity": "high",
+      "status": "false_positive",
+      "first_seen_run_id": "awz.bx24lead-1726550059",
+      "last_seen_run_id": "awz.bx24lead-1726550059",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/helper.php",
+        "line": "452"
+      },
+      "current_location": {
+        "file": "lib/helper.php",
+        "line": "452"
+      },
+      "latest_vulnerability": {
+        "file": "lib/helper.php",
+        "line": "452",
+        "type": "RCE",
+        "severity": "high",
+        "description": "Подтверждена RCE через eval(). Функция Helper::executePhp() принимает неконтролируемую переменную $code и выполняет её через eval(). Этот метод вызывается в Agent::sendForm() (lib/agent.php:326) из полей формы провайдера, которые могут быть управляемы администратором модуля. Код PHP-фрагмента выполняется в контексте модуля с полным доступом к API Bitrix.",
+        "recommendation": "Заменить eval() на безопасный парсинг шаблонов. Использовать Bitrix MainMailEventMessageThemeCompiler через безопасный интерфейс без exec-вызовов. Если PHP-код необходим - использовать зарегистрированные хукиevents вместо произвольного выполнения.",
+        "fix": "Before:\n$result = eval(code);\n\nAfter:\n$compiled = EventMessageThemeCompiler::compile($code);\nob_start();\necho $compiled;\n$result = ob_get_clean();",
+        "reviewed": {
+          "oldSeverity": "high",
+          "newSeverity": "high",
+          "changed": false,
+          "category": "confirmed-backdoor",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "block-and-escalate-security-review",
+          "confidence": "medium",
+          "rationale": "Kept/raised as high because the finding combines suspicious obfuscation with an execution, network, filesystem, or exfiltration sink. Obfuscation alone would not be sufficient."
+        },
+        "partner_disposition": {
+          "status": "false_positive",
+          "note": "Настройки задаются администратором модуля",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T09:59:56+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "detected",
+          "at": "2026-09-17T09:57:50+00:00",
+          "location": {
+            "file": "lib/helper.php",
+            "line": "452"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:59:56+00:00",
+          "status": "false_positive",
+          "note": "Настройки задаются администратором модуля",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00015",
+      "fingerprint": "5244aa8f593727f77d64d2bf2e4c4699",
+      "type": "SSRF",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1726550059",
+      "last_seen_run_id": "awz.bx24lead-1726550059",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/agent.php",
+        "line": "350-816"
+      },
+      "current_location": {
+        "file": "lib/agent.php",
+        "line": "350-816"
+      },
+      "latest_vulnerability": {
+        "file": "lib/agent.php",
+        "line": "350-816",
+        "type": "SSRF",
+        "severity": "medium",
+        "description": "Подозрение: SSRF (blind). В классе Agent используется HttpClient для отправки запросов к внешним CRM-системам (bitrix24, amoCRM). URL формируется из данных провайдеров ($provider['MAIN_HOOK']) и содержит Bearer-токены. Атакующий с доступом к конфигурации провайдеров может направить запросы на внутренние ресурсы. Запросы являются blind (ответ не возвращается), что ограничивает воздействие до egress-only.",
+        "recommendation": "Валидировать URL провайдеров на whitelist разрешённых доменов. Не хранить токены в открытом виде. Добавить проверку, что домен входит в разрешённый список.",
+        "fix": "Before:\n$client = new HttpClient();\n$client->setHeader('Authorization', 'Bearer '.$urlData[2]);\n$r = $client->get($url);\n\nAfter:\n$parseUrl = parse_url($url);\nif(!in_array($parseUrl['host'], $this->allowedDomains)){\n    throw new Error('Domain not allowed');\n}\n$client = new HttpClient();\n$client->setHeader('Authorization', 'Bearer '.$urlData[2]);\n$r = $client->get($url);",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "potential-api-token-exposure",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "validate-token-kind-and-keep-server-side",
+          "confidence": "medium",
+          "rationale": "Kept as a real issue if the value is an OAuth/API-Key/bearer-style secret or if transport/authentication handling can expose such secrets. If the field is only a public widget/model identifier, this finding should be removed or downgraded after code/value validation."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T09:59:56+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "detected",
+          "at": "2026-09-17T09:57:50+00:00",
+          "location": {
+            "file": "lib/agent.php",
+            "line": "350-816"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:59:56+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00016",
+      "fingerprint": "03562a41270c86e6f68ce11202a2b0d8",
+      "type": "SSRF",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1726550059",
+      "last_seen_run_id": "awz.bx24lead-1726550059",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/helper.php",
+        "line": "71-219"
+      },
+      "current_location": {
+        "file": "lib/helper.php",
+        "line": "71-219"
+      },
+      "latest_vulnerability": {
+        "file": "lib/helper.php",
+        "line": "71-219",
+        "type": "SSRF",
+        "severity": "medium",
+        "description": "Подозрение: SSRF (blind). Метод Helper::getExtFieldParams() отправляет HTTP-запросы к CRM-API (bitrix24, amoCRM) на основе URL из конфигурации провайдеров. URL формируется из данных провайдеров и содержит токены авторизации. Ответ не используется для обратного туннелирования, но запросы могут быть направлены на внутренние ресурсы.",
+        "recommendation": "Валидировать домены в URL провайдеров. Добавить whitelist разрешённых доменов CRM-систем.",
+        "fix": "Before:\n$httpClient = new HttpClient();\n$res = $httpClient->get($url);\n\nAfter:\n$parseUrl = parse_url($url);\nif(!in_array($parseUrl['host'], ['api.bitrix24.com', 'api.amocrm.com'])){\n    throw new Error('Domain not allowed');\n}\n$httpClient = new HttpClient();\n$res = $httpClient->get($url);",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "medium",
+          "changed": false,
+          "category": "kept-as-reported",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "fix",
+          "confidence": "medium",
+          "rationale": "Severity left unchanged after review; no stronger Bitrix/BUS-specific downgrade condition was identified from the journal text alone."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T09:59:56+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "detected",
+          "at": "2026-09-17T09:57:50+00:00",
+          "location": {
+            "file": "lib/helper.php",
+            "line": "71-219"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:59:56+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00017",
+      "fingerprint": "c2853bdc8595515b662c399e76dba34c",
+      "type": "Cross-Site Scripting",
+      "severity": "low",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1726550059",
+      "last_seen_run_id": "awz.bx24lead-1726550059",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/bx24trace.php",
+        "line": "14-15"
+      },
+      "current_location": {
+        "file": "lib/bx24trace.php",
+        "line": "14-15"
+      },
+      "latest_vulnerability": {
+        "file": "lib/bx24trace.php",
+        "line": "14-15",
+        "type": "Cross-Site Scripting",
+        "severity": "low",
+        "description": "Подтверждён Stored XSS. bx24Trace::OnProlog() сохраняет значение $_REQUEST['TRACE'] напрямую в сессию без экранирования. Затем значение читается через session->get('BX24_TRACE') и может быть выведено на любой странице модуля без экранирования. Если TRACE содержит JavaScript-код, он будет выполнен при следующей загрузке страницы.",
+        "recommendation": "Экранировать вывод значения TRACE через htmlspecialcharsbx() или Json::encode() при сохранении в сессию или при выводе.",
+        "fix": "Before:\nif($request->get('TRACE'))\n    $session->set('BX24_TRACE', $request->get('TRACE'));\n\nAfter:\nif($request->get('TRACE'))\n    $session->set('BX24_TRACE', htmlspecialcharsbx($request->get('TRACE')));",
+        "reviewed": {
+          "oldSeverity": "medium",
+          "newSeverity": "low",
+          "changed": true,
+          "category": "stored-xss-trusted-editor-content",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "harden-output-escaping",
+          "confidence": "high",
+          "rationale": "Downgraded because the journal describes a stored XSS source controlled by a Bitrix admin/content editor or another trusted content-management role. In BUS such users can normally publish HTML/JS through legitimate site-management mechanisms, so this is template hardening rather than a high module vulnerability unless a low-privileged/external source is proven."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T09:59:56+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "detected",
+          "at": "2026-09-17T09:57:50+00:00",
+          "location": {
+            "file": "lib/bx24trace.php",
+            "line": "14-15"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:59:56+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00018",
+      "fingerprint": "babc5868edf72ce5179f1a9301fe21b4",
+      "type": "Insecure Deserialization",
+      "severity": "low",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1726550059",
+      "last_seen_run_id": "awz.bx24lead-1726550059",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/api/filters/sign.php",
+        "line": "30-31"
+      },
+      "current_location": {
+        "file": "lib/api/filters/sign.php",
+        "line": "30-31"
+      },
+      "latest_vulnerability": {
+        "file": "lib/api/filters/sign.php",
+        "line": "30-31",
+        "type": "Insecure Deserialization",
+        "severity": "low",
+        "description": "Подозрение: unserialize с защитой. Метод Sign::onBeforeAction() выполняет base64_decode() + unserialize() с опцией ['allowed_classes' => false]. Хотя классы отключены, сериализованные данные могут быть использованы для DoS через массивы с большим количеством элементов. Защита через allowed_classes снижает риск, но не устраняет полностью.",
+        "recommendation": "Добавить проверку подписи через SecuritySignSigner перед десериализацией. Убедиться, что данные действительно подписаны секретным ключом.",
+        "fix": "Before:\n$params = $signer->unsign($signed);\n$params = unserialize(base64_decode($params), ['allowed_classes' => false]);\n\nAfter:\n$originalSig = substr($signed, strlen($signed)-64);\n$data = substr($signed, 0, strlen($signed)-64);\nif(!$signer->verify($data, $originalSig, $keys)){\n    throw new SecurityViolation('Invalid sign');\n}\n$params = unserialize(base64_decode($data), ['allowed_classes' => false]);",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "low",
+          "changed": false,
+          "category": "kept-as-reported",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "fix",
+          "confidence": "medium",
+          "rationale": "Severity left unchanged after review; no stronger Bitrix/BUS-specific downgrade condition was identified from the journal text alone."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T09:59:56+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "detected",
+          "at": "2026-09-17T09:57:50+00:00",
+          "location": {
+            "file": "lib/api/filters/sign.php",
+            "line": "30-31"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:59:56+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00019",
+      "fingerprint": "faf96c91a73d77d2c8802aef224f3d3c",
+      "type": "Open Redirect",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1726550059",
+      "last_seen_run_id": "awz.bx24lead-1726550059",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "lib/adminpages/providersedit.php",
+        "line": "51"
+      },
+      "current_location": {
+        "file": "lib/adminpages/providersedit.php",
+        "line": "51"
+      },
+      "latest_vulnerability": {
+        "file": "lib/adminpages/providersedit.php",
+        "line": "51",
+        "type": "Open Redirect",
+        "severity": "medium",
+        "description": "Подозрение: Open Redirect. Метод checkDelete() использует LocalRedirect() с URL, содержащим параметры из $this->getParam(). Параметр MODIF добавляется непосредственно к URL редиректа без валидации. При наличии полного пути в MODIF возможен редирект на внешний домен.",
+        "recommendation": "Валидировать URL перед редиректом. Проверять, что URL начинается только с '/'. Не позволять добавлять произвольные параметры к URL.",
+        "fix": "Before:\nLocalRedirect with unvalidated MODIF param\n\nAfter:\n$url = $this->getParam('LIST_URL');\nif(strpos($url,'//')===0 || strpos($url,'http')===0) {\n    throw new Error('Invalid redirect URL');\n}\nLocalRedirect($url.'?lang='.LANG);",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "medium",
+          "changed": true,
+          "category": "open-redirect-unclear-source",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "validate-source-and-allowlist",
+          "confidence": "low",
+          "rationale": "Left as medium pending confirmation of whether the redirect target is request-controlled or only editable by trusted administrators."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T09:59:56+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "detected",
+          "at": "2026-09-17T09:57:50+00:00",
+          "location": {
+            "file": "lib/adminpages/providersedit.php",
+            "line": "51"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:59:56+00:00",
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski"
+        }
+      ]
+    },
+    {
+      "journal_finding_id": "JF-00020",
+      "fingerprint": "1d1613217e7a87a76911a5348b3afd84",
+      "type": "Open Redirect",
+      "severity": "medium",
+      "status": "accepted_risk",
+      "first_seen_run_id": "awz.bx24lead-1726550059",
+      "last_seen_run_id": "awz.bx24lead-1726550059",
+      "resolved_run_id": null,
+      "original_location": {
+        "file": "options.php",
+        "line": "57"
+      },
+      "current_location": {
+        "file": "options.php",
+        "line": "57"
+      },
+      "latest_vulnerability": {
+        "file": "options.php",
+        "line": "57",
+        "type": "Open Redirect",
+        "severity": "medium",
+        "description": "Подозрение: Open Redirect. Файл options.php использует LocalRedirect($saveUrl) после обработки addiblock. Переменная $saveUrl формируется из $APPLICATION->GetCurPage(false) с параметрами. Если атакующий может контролировать referer или параметры URL, возможен редирект.",
+        "recommendation": "Валидировать URL перед редиректом. Использовать только относительные URL, начинающиеся с '/'.",
+        "fix": "Before:\nLocalRedirect($saveUrl);\n\nAfter:\nif(strpos($saveUrl,'//')!==0 && strpos($saveUrl,'http')!==0){\n    LocalRedirect($saveUrl);\n} else {\n    LocalRedirect('/bitrix/admin/options.php?mid='.$module_id);\n}",
+        "reviewed": {
+          "oldSeverity": "low",
+          "newSeverity": "medium",
+          "changed": true,
+          "category": "open-redirect-unclear-source",
+          "versionScope": "current",
+          "version": "current",
+          "currentVersionRelevance": "present-in-current-scan",
+          "action": "validate-source-and-allowlist",
+          "confidence": "low",
+          "rationale": "Left as medium pending confirmation of whether the redirect target is request-controlled or only editable by trusted administrators."
+        },
+        "partner_disposition": {
+          "status": "accepted_risk",
+          "note": "",
+          "author": "Andrew Zahalski",
+          "updated_at": "2026-09-17T09:59:56+00:00"
+        }
+      },
+      "events": [
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "detected",
+          "at": "2026-09-17T09:57:50+00:00",
+          "location": {
+            "file": "options.php",
+            "line": "57"
+          },
+          "status": "open"
+        },
+        {
+          "run_id": "awz.bx24lead-1726550059",
+          "event": "partner_disposition_updated",
+          "at": "2026-09-17T09:59:56+00:00",
           "status": "accepted_risk",
           "note": "",
           "author": "Andrew Zahalski"
